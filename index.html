@@ -2768,19 +2768,22 @@ function partMat(slot,E){
   return new THREE.MeshPhysicalMaterial({color:0x888888})}
 /* =====================================================================
    GLBX — modelos 3D reais (GLB) p/ armas e personagens.
-   Arquivos em assets/ (já sem textura, orientados e escalados). Carrega sob demanda / em fatias;
-   se falhar, o modelo blocky antigo continua valendo (fallback). Skins do jogo (skinMaterial/c1/c2) e
-   paleta dos agentes são aplicadas por cima.
+   • assets/ traz os GLBs originais SEM textura (malha idêntica). Carrega sob demanda / em fatias;
+     se falhar, o blocky antigo continua valendo (fallback).
+   • Armas: skins do jogo (skinMaterial c1/c2/textura procedural) por cima da malha.
+   • Personagens: malha inteira com esqueleto (SkinnedMesh) pintada com a paleta do agente, animada por
+     ossos (caminhada, agachar, tronco, cabeça, IK dos braços) a partir dos mesmos controles do boneco antigo.
    ===================================================================== */
 const GLBX=(()=>{
   const BASE='assets/',cache={},gcache={},tracked=new Set();
-  const FILE={"ak47": "w_ak47.glb", "m4a4": "w_m4a4.glb", "m4a1s": "w_m4a1s.glb", "awp_boom": "w_awp_boom.glb", "awp_egypt": "w_awp_egypt.glb", "deagle": "w_deagle.glb", "fiveseven": "w_fiveseven.glb", "knife": "w_knife.glb", "char_zone9": "char_zone9.glb", "char_province": "char_province.glb", "char_archie": "char_archie.glb", "char_dummy": "char_dummy.glb"},META={"ak47": {"muzzle": -0.64, "grip": [0, -0.09, -0.032], "fore": [0, -0.017, -0.346]}, "m4a4": {"muzzle": -0.78, "grip": [0, -0.1, -0.161], "fore": [0, -0.017, -0.47]}, "m4a1s": {"muzzle": -0.78, "grip": [0, -0.1, -0.18], "fore": [0, -0.017, -0.49]}, "awp_boom": {"muzzle": -0.93, "grip": [0, -0.085, -0.027], "fore": [0, -0.03, -0.336]}, "awp_egypt": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "deagle": {"muzzle": -0.2, "grip": [0, -0.066, 0.013], "fore": [0, -0.068, -0.005]}, "fiveseven": {"muzzle": -0.13, "grip": [0, -0.063, 0.048], "fore": [0, -0.065, 0.03]}, "knife": {"muzzle": -0.34, "grip": [0, 0, -0.04], "fore": [0, 0, -0.04]}},PIV={"char_zone9": {"hipN": [-0.123, 0.951, 0.0], "hipP": [0.123, 0.951, -0.0], "shN": [-0.184, 1.444, -0.011], "shP": [0.184, 1.444, -0.011], "neck": [0.0, 1.52, -0.0]}, "char_province": {"hipN": [-0.124, 0.966, 0.0], "hipP": [0.124, 0.966, -0.0], "shN": [-0.185, 1.463, -0.011], "shP": [0.185, 1.463, -0.011], "neck": [0.0, 1.54, -0.0]}, "char_archie": {"hipN": [-0.123, 0.951, 0.0], "hipP": [0.123, 0.951, 0.0], "shN": [-0.184, 1.444, 0.0], "shP": [0.184, 1.444, 0.0], "neck": [0.0, 1.53, 0.0]}, "char_dummy": {"hipN": [-0.123, 0.951, 0.0], "hipP": [0.123, 0.951, 0.0], "shN": [-0.184, 1.444, 0.0], "shP": [0.184, 1.444, 0.0], "neck": [0.0, 1.53, 0.0]}};
+  const FILE={"ak47": "w_ak47.glb", "m4a4": "w_m4a4.glb", "m4a1s": "w_m4a1s.glb", "awp_boom": "w_awp_boom.glb", "awp_egypt": "w_awp_egypt.glb", "deagle": "w_deagle.glb", "fiveseven": "w_fiveseven.glb", "knife": "w_knife.glb", "char_zone9": "char_zone9.glb", "char_province": "char_province.glb", "char_archie": "char_archie.glb", "char_dummy": "char_dummy.glb"},META={"ak47": {"muzzle": -0.64, "grip": [0, -0.09, -0.032], "fore": [0, -0.017, -0.346]}, "m4a4": {"muzzle": -0.78, "grip": [0, -0.1, -0.16], "fore": [0, -0.017, -0.47]}, "m4a1s": {"muzzle": -0.78, "grip": [0, -0.1, -0.18], "fore": [0, -0.017, -0.49]}, "awp_boom": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "awp_egypt": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "deagle": {"muzzle": -0.2, "grip": [0, -0.066, 0.013], "fore": [0, -0.068, -0.005]}, "fiveseven": {"muzzle": -0.13, "grip": [0, -0.063, 0.048], "fore": [0, -0.065, 0.03]}, "knife": {"muzzle": -0.34, "grip": [0, 0, -0.04], "fore": [0, 0, -0.04]}},RIG={"char_zone9": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, -0.0], "chest": [0.0, 1.281, -0.0], "neck": [0.0, 1.503, -0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.37, 1.231, -0.05], "handN": [-0.557, 1.075, 0.048], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.37, 1.231, -0.05], "handP": [0.557, 1.075, 0.048], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, -0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_province": {"pelvis": [0.0, 0.967, 0.0], "spine": [0.0, 1.058, -0.0], "chest": [0.0, 1.299, -0.0], "neck": [0.0, 1.522, -0.0], "head": [0.0, 1.607, 0.017], "clavN": [-0.081, 1.459, -0.011], "uarmN": [-0.185, 1.463, -0.011], "farmN": [-0.373, 1.248, -0.051], "handN": [-0.561, 1.091, 0.049], "clavP": [0.081, 1.459, -0.011], "uarmP": [0.185, 1.463, -0.011], "farmP": [0.373, 1.248, -0.051], "handP": [0.561, 1.091, 0.049], "thighN": [-0.124, 0.967, 0.0], "calfN": [-0.142, 0.53, 0.013], "footN": [-0.161, 0.116, -0.033], "thighP": [0.124, 0.967, -0.0], "calfP": [0.142, 0.53, 0.013], "footP": [0.161, 0.116, -0.033]}, "char_archie": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_dummy": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}};
+  const BN=['pelvis','spine','chest','neck','head','clavN','uarmN','farmN','handN','clavP','uarmP','farmP','handP','thighN','calfN','footN','thighP','calfP','footP'];
+  const PAR=[-1,0,1,2,3,2,5,6,7,2,9,10,11,0,13,14,0,16,17];
   const WMAP={ak47:'ak47',m4a4:'m4a4',m4a1s:'m4a1s',awp:'awp_boom',deagle:'deagle',glock:'fiveseven',usp:'fiveseven',knife:'knife'};
   const CMAP={T:['char_zone9','char_archie'],CT:['char_province','char_archie']};
-  let loader=null,hookT=0,invis=null,cmat=null;
+  let loader=null,hookT=0,invis=null;
   const warn=(...a)=>console.warn('[GLB]',...a);
   const INV=()=>invis||(invis=new THREE.MeshBasicMaterial({visible:false}));
-  const CM=()=>cmat||(cmat=new THREE.MeshLambertMaterial({vertexColors:true}));
   function ensure(k){
     let e=cache[k];if(e)return e.p;
     e=cache[k]={state:'loading',parts:null,p:null};
@@ -2808,31 +2811,81 @@ const GLBX=(()=>{
     let mS=skinMaterial(sk,E),mM=new THREE.MeshPhysicalMaterial({color:0x1a1c20,roughness:.3,metalness:.8,envMap:E,envMapIntensity:.9});
     const ov=slots||(sk.parts?resolveParts(sk):null);if(ov){mS=partMat(ov.S,E)||mS;mM=partMat(ov.M,E)||mM}
     const g=new THREE.Group();
-    for(const pn in e.parts){const m=new THREE.Mesh(e.parts[pn].geometry,(pn==='body'||pn==='mag'||(pn==='slide'&&pist))?mS:mM);
+    for(const pn in e.parts){const m=new THREE.Mesh(e.parts[pn].geometry,(pn==='body'||pn==='mag'||pn==='mag2'||(pn==='slide'&&pist))?mS:mM);
       if(vm)m.renderOrder=999;else m.castShadow=true;m.userData.glb=1;g.add(m)}
     g.userData={grip:new THREE.Vector3(...meta.grip),fore:new THREE.Vector3(...meta.fore),muzzle:meta.muzzle,glb:key};
     return g}
   /* ---------- personagens ---------- */
   function charKey(team,c){if(c.id==='dummy')return'char_dummy';const L=CMAP[team==='CT'?'CT':'T'];return(c.t===0||(idHash(c.id)&1)===0)?L[0]:L[1]}
   const palette=c=>{const h=v=>new THREE.Color(v),face=c.mask!=null?c.mask:c.skin;
-    return[h(c.suit),h(c.pants!=null?c.pants:c.suit),h(c.vest),h(face),h(c.helm),h(face),h(0x15110d),h(0x1e2023),h(0x16181b),h(c.gog!=null?c.gog:face)]};
+    return[h(c.suit),h(c.pants!=null?c.pants:c.suit),h(c.vest),h(face),h(c.helm),h(face),h(0x15110d),h(0x1e2023),h(0x16181b),h(face)]};
   function colorGeo(g0,pal){const g=new THREE.BufferGeometry(),sl=g0.attributes._slot,n=g0.attributes.position.count,col=new Float32Array(n*3);
     for(let i=0;i<n;i++){const c=pal[sl?sl.array[i]:0]||pal[0];col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b}
-    g.setAttribute('position',g0.attributes.position);g.setAttribute('normal',g0.attributes.normal);g.setAttribute('color',new THREE.BufferAttribute(col,3));
-    if(g0.index)g.setIndex(g0.index);return g}
-  function piv(g,x,y,z){const dx=g.position.x-x,dy=g.position.y-y,dz=g.position.z-z;g.children.forEach(ch=>{ch.position.x+=dx;ch.position.y+=dy;ch.position.z+=dz});g.position.set(x,y,z)}
+    g.setAttribute('position',g0.attributes.position);g.setAttribute('normal',g0.attributes.normal);
+    g.setAttribute('skinIndex',g0.attributes.skinIndex);g.setAttribute('skinWeight',g0.attributes.skinWeight);
+    g.setAttribute('color',new THREE.BufferAttribute(col,3));if(g0.index)g.setIndex(g0.index);return g}
+  const Q=THREE.Quaternion,V3c=THREE.Vector3,EUL=THREE.Euler,UX=new V3c(1,0,0);
+  const qe=(x,y,z)=>new Q().setFromEuler(new EUL(x,y,z,'YXZ')),qx=a=>new Q().setFromAxisAngle(UX,a);
+  const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+  /* Animador por ossos: lê os controles do boneco antigo (pernas, tronco, cabeça, agachar, alvos das mãos) */
+  class Rig{
+    constructor(o,key,cont,bones){this.o=o;this.cont=cont;this.B=bones;const b=RIG[key];
+      this.bind=BN.map(n=>new V3c(...b[n]));this.loc=BN.map((n,i)=>PAR[i]<0?this.bind[i].clone():this.bind[i].clone().sub(this.bind[PAR[i]]));
+      this.ix={};BN.forEach((n,i)=>this.ix[n]=i);this.f=[0,0];this.prev=[0,0];this.sgn=[1,1];this.env=.3;this.t=0;this.init=false;
+      this.l1=[0,1].map(i=>{const k='NP'[i];return this.bind[this.ix['farm'+k]].distanceTo(this.bind[this.ix['uarm'+k]])});
+      this.l2=[0,1].map(i=>{const k='NP'[i];return this.bind[this.ix['hand'+k]].distanceTo(this.bind[this.ix['farm'+k]])})}
+    update(){
+      const now=performance.now();let dt=(now-this.t)/1000;if(this.init&&dt<.004)return;this.t=now;this.init=true;dt=cl(dt,.001,.1);
+      const o=this.o,ix=this.ix,n=BN.length,q=[],pos=this.loc.map(v=>v.clone());for(let i=0;i<n;i++)q.push(new Q());
+      const sw=[o.legL.rotation.x,o.legR.rotation.x],r=o.root.scale.y,c=cl((1-r)/.2,0,1);
+      this.cont.scale.y=1/Math.max(.3,r);
+      const f=this.f,pv=this.prev;for(let i=0;i<2;i++)f[i]+=(sw[i]-f[i])*Math.min(1,dt*20);
+      this.env=Math.max(this.env*.995,Math.abs(f[0]),.3);const a=Math.min(1.3,Math.max(Math.abs(f[0]),Math.abs(f[1]))/.7),cf=[0,0];
+      for(let i=0;i<2;i++){const d=f[i]-pv[i];if(Math.abs(d)>1e-4)this.sgn[i]=d>0?1:-1;const sv=cl(f[i]/this.env,-1,1);cf[i]=Math.sqrt(1-sv*sv)*this.sgn[i];pv[i]=f[i]}
+      const tr=o.tor.rotation,hd=o.hd.rotation,ty=o.tor.position.y;
+      pos[0].y+=cl(ty-.94,-.06,.06)-.19*c;
+      const py=-.10*a*(f[0]/this.env);
+      q[0]=qe(0,py,.03*a*(f[0]/this.env));
+      q[1]=qe(tr.x*.5+.18*c,tr.y*.5-py*.6,tr.z*.5);q[2]=qe(tr.x*.5,tr.y*.5-py*.4,tr.z*.5);
+      q[3]=qe(hd.x*.35-tr.x*.3,hd.y*.35,hd.z*.35);q[4]=qe(hd.x*.65-tr.x*.3,hd.y*.65,hd.z*.65);
+      ['N','P'].forEach((k,i)=>{const th=f[i]*.72-.65*c;let fl=a*.8*Math.pow(Math.max(0,cf[i]),1.3)+.06*a+1.34*c;fl=Math.max(0,fl);
+        q[ix['thigh'+k]]=qx(th);q[ix['calf'+k]]=qx(fl);q[ix['foot'+k]]=qx(-(th+fl)*.85)});
+      const Pw=new Array(n),Qw=new Array(n);
+      for(let i=0;i<n;i++){const p=PAR[i];if(p<0){Pw[i]=pos[i].clone();Qw[i]=q[i].clone()}else{Pw[i]=pos[i].clone().applyQuaternion(Qw[p]).add(Pw[p]);Qw[i]=Qw[p].clone().multiply(q[i])}}
+      const tq=o.tor.quaternion,tp=o.tor.position;
+      ['N','P'].forEach((k,i)=>{const arm=o.arms[i];if(!arm||!arm.H)return;
+        const Ht=arm.H.clone().applyQuaternion(tq).add(tp),ci=ix['clav'+k],ua=ix['uarm'+k],fa=ix['farm'+k],ha=ix['hand'+k],S=Pw[ua],l1=this.l1[i],l2=this.l2[i];
+        let d=Ht.clone().sub(S);const dn0=d.clone().normalize();d=Ht.clone().sub(dn0.clone().multiplyScalar(.05)).sub(S);let L=d.length();
+        const mx=(l1+l2)*.995;if(L>mx){d.setLength(mx);L=mx}if(L<.12){d.setLength(.12);L=.12}
+        const dn=d.clone().divideScalar(L),aa=(l1*l1-l2*l2+L*L)/(2*L),hh=Math.sqrt(Math.max(0,l1*l1-aa*aa)),sg=k==='N'?-1:1;
+        const p=new V3c(sg*.7,-.8,-.25).normalize();p.sub(dn.clone().multiplyScalar(p.dot(dn))).normalize();
+        const E=S.clone().add(dn.clone().multiplyScalar(aa)).add(p.multiplyScalar(hh)),Wr=S.clone().add(d);
+        const bd1=this.bind[fa].clone().sub(this.bind[ua]),bd2=this.bind[ha].clone().sub(this.bind[fa]);
+        const Qu=new Q().setFromUnitVectors(bd1.clone().normalize(),E.clone().sub(S).normalize()),Qf=new Q().setFromUnitVectors(bd2.clone().normalize(),Wr.clone().sub(E).normalize());
+        q[ua]=Qw[ci].clone().invert().multiply(Qu);Qw[ua]=Qu;Pw[fa]=S.clone().add(bd1.applyQuaternion(Qu));
+        q[fa]=Qu.clone().invert().multiply(Qf);Qw[fa]=Qf;q[ha]=new Q()});
+      for(let i=0;i<n;i++){this.B[i].position.copy(pos[i]);this.B[i].quaternion.copy(q[i])}
+      this.B[0].updateMatrixWorld(true)}}
+  const CMAT=()=>{const m=new THREE.MeshLambertMaterial({vertexColors:true});m.skinning=true;return m};
+  let cmat=null;
   function apply(o){
     const d=o._glb;if(!d||d.done||!ok(d.key))return;
-    const e=cache[d.key],P=PIV[d.key],c=d.c,gk=d.key+'|'+c.id;
-    let G=gcache[gk];if(!G){G=gcache[gk]={};const pal=palette(c);for(const pn in e.parts)G[pn]=colorGeo(e.parts[pn].geometry,pal)}
+    const e=cache[d.key],c=d.c,lod=d.det||!e.parts.lod2?'lod0':'lod2',gk=d.key+'|'+c.id+'|'+lod;
+    if(!e.parts[lod])return;
+    let geo=gcache[gk];if(!geo)geo=gcache[gk]=colorGeo(e.parts[lod].geometry,palette(c));
     const keep=new Set();if(o.gun)o.gun.traverse(x=>keep.add(x));
     o.root.traverse(m=>{if(m.isMesh&&!keep.has(m))m.material=INV()});   // blocky some da tela, mas as hitboxes continuam no raycast
-    const add=(pn,par)=>{if(!G[pn])return;const m=new THREE.Mesh(G[pn],CM());m.castShadow=!!d.det;m.userData.glb=1;par.add(m)};
-    piv(o.legL,...P.hipN);piv(o.legR,...P.hipP);add('legN',o.legL);add('legP',o.legR);
-    add('torso',o.tor);
-    piv(o.hd,0,P.neck[1]-.94,P.neck[2]);add('head',o.hd);
-    [['N',P.shN],['P',P.shP]].forEach(([s,sh],i)=>{const a=o.arms[i];a.S.set(sh[0],sh[1]-.94,sh[2]);add('arm'+s+'_up',a.up);add('arm'+s+'_fo',a.fo)});
-    o._gx=-.03;o._gy=-.076;d.done=true;
+    const b=RIG[d.key],bones=BN.map(n=>{const x=new THREE.Bone();x.name=n;return x});
+    BN.forEach((n,i)=>{const p=PAR[i];if(p>=0)bones[p].add(bones[i]);const pp=p>=0?b[BN[p]]:[0,0,0];bones[i].position.set(b[n][0]-pp[0],b[n][1]-pp[1],b[n][2]-pp[2])});
+    const inv=BN.map(n=>new THREE.Matrix4().makeTranslation(-b[n][0],-b[n][1],-b[n][2]));
+    cmat=cmat||CMAT();
+    const cont=new THREE.Group(),sm=new THREE.SkinnedMesh(geo,cmat);sm.add(bones[0]);cont.add(sm);o.root.add(cont);
+    cont.updateMatrixWorld(true);sm.bind(new THREE.Skeleton(bones,inv),new THREE.Matrix4());
+    sm.castShadow=!!d.det;sm.userData.glb=1;
+    const rig=new Rig(o,d.key,cont,bones);o._rig=rig;sm.onBeforeRender=()=>{try{rig.update()}catch(er){if(!rig.bad){rig.bad=1;warn('animação',er)}}};
+    // arma na altura do ombro do modelo (corpo menor que o blocky); mão esquerda mais perto do corpo
+    const sh=rig.bind[rig.ix.uarmP].y-.94;
+    o._gx=-.03;o._gy=sh-.06-.52;o._gz=-.16;o._fz=.5;d.done=true;
     if(o._w)o.setWeapon(o._w[0],o._w[1])}
   function dressBot(o,team,c,det){
     const key=charKey(team,c);o._glb={key,c,det,done:false};tracked.add(o);
@@ -3209,7 +3262,7 @@ function makeBotMesh(team,ag,det){
     mesh(RBm(.108,.1,.13,.03),mGlove,'torso',hand,0,0,0);mesh(bxg(.1,.03,.05),mBlack,null,hand,0,.02,-.04);
     if(det)mesh(bxg(.075,.03,.06),mGlove,null,hand,0,-.02,.03);
     return{S:new THREE.Vector3(sx*.255,.58,0),up,fo,hand,sx}});
-  const pose=(a,H)=>{
+  const pose=(a,H)=>{a.H=H.clone();
     const S=a.S,d=H.clone().sub(S),l1=.34,l2=.33;let L=d.length();
     if(L>l1+l2-.004){d.setLength(l1+l2-.004);L=d.length()}if(L<.12){d.setLength(.12);L=.12}
     const dir=d.clone().normalize(),aa=(l1*l1-l2*l2+L*L)/(2*L),hh=Math.sqrt(Math.max(0,l1*l1-aa*aa));
@@ -3227,10 +3280,10 @@ function makeBotMesh(team,ag,det){
       if(gunG)tor.remove(gunG);
       gunG=weaponModel(id,skinId,false);if(!det){mergeByMaterial(gunG);gunG.traverse(o=>{if(o.isMesh)o.castShadow=false})}gunG.scale.setScalar(.85);   // fuzil ~0,97 m
       const pist=W[id].kind==='pistol'||id==='knife';
-      gunG.position.set((pist?.07:.13)+(this._gx||0),(pist?.46:.52)+(this._gy||0),pist?.34:.4);gunG.rotation.y=pist?Math.PI:Math.PI-.3;      // cano para a frente (+Z do boneco)
+      gunG.position.set((pist?.07:.13)+(this._gx||0),(pist?.46:.52)+(this._gy||0),(pist?.34:.4)+(this._gz||0));gunG.rotation.y=pist?Math.PI:Math.PI-.3;      // cano para a frente (+Z do boneco)
       tor.add(gunG);gunG.updateMatrix();const ud=gunG.userData;
       pose(arms[1],ud.grip.clone().applyMatrix4(gunG.matrix));
-      const fr=ud.fore.clone();if(!pist)fr.z*=.7;pose(arms[0],fr.applyMatrix4(gunG.matrix));
+      const fr=ud.fore.clone();if(!pist)fr.z*=(this._fz||.7);pose(arms[0],fr.applyMatrix4(gunG.matrix));
       this.gun=gunG}};
   obj.setWeapon('ak47',defSkin('ak47'));
   try{GLBX.dressBot(obj,team,c,det)}catch(e){console.warn('[GLB] personagem',e)}
