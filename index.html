@@ -2852,18 +2852,32 @@ const GLBX=(()=>{
         q[ix['thigh'+k]]=qx(th);q[ix['calf'+k]]=qx(fl);q[ix['foot'+k]]=qx(-(th+fl)*.85)});
       const Pw=new Array(n),Qw=new Array(n);
       for(let i=0;i<n;i++){const p=PAR[i];if(p<0){Pw[i]=pos[i].clone();Qw[i]=q[i].clone()}else{Pw[i]=pos[i].clone().applyQuaternion(Qw[p]).add(Pw[p]);Qw[i]=Qw[p].clone().multiply(q[i])}}
-      const tq=o.tor.quaternion,tp=o.tor.position;
-      ['N','P'].forEach((k,i)=>{const arm=o.arms[i];if(!arm||!arm.H)return;
-        const Ht=arm.H.clone().applyQuaternion(tq).add(tp),ci=ix['clav'+k],ua=ix['uarm'+k],fa=ix['farm'+k],ha=ix['hand'+k],S=Pw[ua],l1=this.l1[i],l2=this.l2[i];
-        let d=Ht.clone().sub(S);const dn0=d.clone().normalize();d=Ht.clone().sub(dn0.clone().multiplyScalar(.05)).sub(S);let L=d.length();
+      const tq=o.tor.quaternion,tp=o.tor.position,tg=[null,null];
+      /* pose de segurar a arma: pistola = 1 mão (mão livre apoia no pulso); arma longa = 2 mãos (cabo + guarda-mão); faca = cabo + frente */
+      const g=o.gun,id=o._w&&o._w[0],ap=o.arms[1];
+      if(g&&id&&W[id]&&ap&&ap.H&&g.userData&&g.userData.grip){
+        const M=g.matrix,gT=g.userData.grip.clone().applyMatrix4(M);
+        if(ap.H.distanceTo(gT)<.03){
+          const fw=new V3c(0,0,-1).transformDirection(M),sd=new V3c(1,0,0).transformDirection(M);if(sd.x<0)sd.negate();
+          const kn=id==='knife',pi=W[id].kind==='pistol',dwn=(y)=>new V3c(0,y,0);
+          const TP=gT.clone().addScaledVector(sd,.045).addScaledVector(fw,-.07).add(dwn(-.005));let TN,hdN=fw,poleN,poleP;
+          if(kn){TN=gT.clone().add(dwn(-.04));poleN=[-.5,-1,-.1];poleP=[.3,-1,-.2]}
+          else if(pi){TN=TP.clone().add(new V3c(-.07,-.05,-.06));hdN=new V3c(.6,.15,.8).normalize();poleN=[-.5,-1,-.3];poleP=[.3,-1,-.2]}
+          else{const fo=g.userData.fore.clone();fo.z*=(o._fz||.7);fo.applyMatrix4(M);TN=fo.add(dwn(-.05)).addScaledVector(fw,-.08);poleN=[-.5,-1,-.1];poleP=[.4,-1,-.6]}
+          tg[1]={T:TP,hd:fw,pole:poleP};tg[0]={T:TN,hd:hdN,pole:poleN}}}
+      ['N','P'].forEach((k,i)=>{const arm=o.arms[i];let A=tg[i];
+        if(!A){if(!arm||!arm.H)return;const dn0=arm.H.clone().sub(this.B[ix['uarm'+k]].position).normalize();A={T:arm.H.clone(),hd:null,pole:[k==='N'?-.7:.7,-.8,-.25],raw:1}}
+        const T=A.T.clone().applyQuaternion(tq).add(tp),ci=ix['clav'+k],ua=ix['uarm'+k],fa=ix['farm'+k],ha=ix['hand'+k],S=Pw[ua],l1=this.l1[i],l2=this.l2[i];
+        let d=T.clone().sub(S);if(A.raw){d.sub(d.clone().normalize().multiplyScalar(.05))}let L=d.length();
         const mx=(l1+l2)*.995;if(L>mx){d.setLength(mx);L=mx}if(L<.12){d.setLength(.12);L=.12}
-        const dn=d.clone().divideScalar(L),aa=(l1*l1-l2*l2+L*L)/(2*L),hh=Math.sqrt(Math.max(0,l1*l1-aa*aa)),sg=k==='N'?-1:1;
-        const p=new V3c(sg*.7,-.8,-.25).normalize();p.sub(dn.clone().multiplyScalar(p.dot(dn))).normalize();
+        const dn=d.clone().divideScalar(L),aa=(l1*l1-l2*l2+L*L)/(2*L),hh=Math.sqrt(Math.max(0,l1*l1-aa*aa));
+        const p=new V3c(...A.pole).normalize();p.sub(dn.clone().multiplyScalar(p.dot(dn))).normalize();
         const E=S.clone().add(dn.clone().multiplyScalar(aa)).add(p.multiplyScalar(hh)),Wr=S.clone().add(d);
         const bd1=this.bind[fa].clone().sub(this.bind[ua]),bd2=this.bind[ha].clone().sub(this.bind[fa]);
         const Qu=new Q().setFromUnitVectors(bd1.clone().normalize(),E.clone().sub(S).normalize()),Qf=new Q().setFromUnitVectors(bd2.clone().normalize(),Wr.clone().sub(E).normalize());
         q[ua]=Qw[ci].clone().invert().multiply(Qu);Qw[ua]=Qu;Pw[fa]=S.clone().add(bd1.applyQuaternion(Qu));
-        q[fa]=Qu.clone().invert().multiply(Qf);Qw[fa]=Qf;q[ha]=new Q()});
+        q[fa]=Qu.clone().invert().multiply(Qf);Qw[fa]=Qf;
+        if(A.hd){const Qh=new Q().setFromUnitVectors(bd2.clone().normalize(),A.hd.clone().normalize().applyQuaternion(tq));q[ha]=Qf.clone().invert().multiply(Qh);Qw[ha]=Qh}else q[ha]=new Q()});
       for(let i=0;i<n;i++){this.B[i].position.copy(pos[i]);this.B[i].quaternion.copy(q[i])}
       this.B[0].updateMatrixWorld(true)}}
   const CMAT=()=>{const m=new THREE.MeshLambertMaterial({vertexColors:true});m.skinning=true;return m};
@@ -2885,7 +2899,7 @@ const GLBX=(()=>{
     const rig=new Rig(o,d.key,cont,bones);o._rig=rig;sm.onBeforeRender=()=>{try{rig.update()}catch(er){if(!rig.bad){rig.bad=1;warn('animação',er)}}};
     // arma na altura do ombro do modelo (corpo menor que o blocky); mão esquerda mais perto do corpo
     const sh=rig.bind[rig.ix.uarmP].y-.94;
-    o._gx=-.03;o._gy=sh-.06-.52;o._gz=-.16;o._fz=.5;d.done=true;
+    o._gx=-.03;o._gy=sh-.06-.52;o._gz=-.16;o._fz=.5;o._gry=.05;o._gxp=.10;o._gyp=sh-.03-.46;o._gzp=.07;d.done=true;
     if(o._w)o.setWeapon(o._w[0],o._w[1])}
   function dressBot(o,team,c,det){
     const key=charKey(team,c);o._glb={key,c,det,done:false};tracked.add(o);
@@ -3280,7 +3294,7 @@ function makeBotMesh(team,ag,det){
       if(gunG)tor.remove(gunG);
       gunG=weaponModel(id,skinId,false);if(!det){mergeByMaterial(gunG);gunG.traverse(o=>{if(o.isMesh)o.castShadow=false})}gunG.scale.setScalar(.85);   // fuzil ~0,97 m
       const pist=W[id].kind==='pistol'||id==='knife';
-      gunG.position.set((pist?.07:.13)+(this._gx||0),(pist?.46:.52)+(this._gy||0),(pist?.34:.4)+(this._gz||0));gunG.rotation.y=pist?Math.PI:Math.PI-.3;      // cano para a frente (+Z do boneco)
+      gunG.position.set((pist?.07:.13)+(pist?(this._gxp||0):(this._gx||0)),(pist?.46:.52)+(pist?(this._gyp||0):(this._gy||0)),(pist?.34:.4)+(pist?(this._gzp||0):(this._gz||0)));gunG.rotation.y=pist?Math.PI:Math.PI-(this._gry===undefined?.3:this._gry);      // cano para a frente (+Z do boneco)
       tor.add(gunG);gunG.updateMatrix();const ud=gunG.userData;
       pose(arms[1],ud.grip.clone().applyMatrix4(gunG.matrix));
       const fr=ud.fore.clone();if(!pist)fr.z*=(this._fz||.7);pose(arms[0],fr.applyMatrix4(gunG.matrix));
