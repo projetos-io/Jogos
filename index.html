@@ -472,7 +472,7 @@ button[data-av] svg{width:28px;height:28px}.avs svg{width:100%;height:100%;displ
   <button class="hbtn" data-id="reload">RECARR.</button>
   <button class="hbtn" data-id="buy">COMPRAR</button>
   <button class="hbtn" data-id="swap">TROCAR</button><button class="hbtn" data-id="drop">SOLTAR</button><button class="hbtn" data-id="pick">PEGAR</button>
-  <button class="hbtn" data-id="scope">MIRA</button><button class="hbtn" data-id="act">AÇÃO</button><button class="hbtn" data-id="frag">GRANADA</button><button class="hbtn" data-id="flash">FLASH</button><button class="hbtn" data-id="smoke">FUMAÇA</button>
+  <button class="hbtn" data-id="scope">MIRA</button><button class="hbtn" data-id="act">AÇÃO</button><button class="hbtn" data-id="frag">GRANADA</button><button class="hbtn" data-id="flash">FLASH</button><button class="hbtn" data-id="smoke">FUMAÇA</button><button class="hbtn" data-id="molotov">MOLOTOV</button>
   <div id="editBar"><div id="edHead"><i>⋮⋮</i>EDITOR DE HUD</div>
     <div id="edSel">Toque em um botão ou elemento para ajustar</div>
     <label class="edr"><span>Tamanho <b id="edSzV"></b></span><input type="range" id="edSz" min="30" max="300" step="5" disabled></label>
@@ -2240,22 +2240,41 @@ const Nav={cs:1.5,x0:-30,z0:-40,nx:40,nz:54,blk:null,pre:null,
 };
 
 /* ---------------- Armas ---------------- */
-const NW={frag:{id:'frag',name:'Granada HE',kind:'nade',slot:4,price:0},flash:{id:'flash',name:'Flashbang',kind:'nade',slot:4,price:0},smoke:{id:'smoke',name:'Granada de Fumaça',kind:'nade',slot:4,price:0}};
+const NW={frag:{id:'frag',name:'Granada HE',kind:'nade',slot:4,price:0},flash:{id:'flash',name:'Flashbang',kind:'nade',slot:4,price:0},smoke:{id:'smoke',name:'Granada de Fumaça',kind:'nade',slot:4,price:0},molotov:{id:'molotov',name:'Molotov / Termita',kind:'nade',slot:4,price:0}};
 const W={
-  m4a4:{id:'m4a4',name:'M4A4',kind:'rifle',slot:1,price:3100,dmg:33,rate:.09,mag:30,res:90,auto:true,spread:.018,rec:.013,reload:2.3,cat:4},
-  m4a1s:{id:'m4a1s',name:'M4A1-S',kind:'rifle',slot:1,price:2900,dmg:35,rate:.09,mag:25,res:75,auto:true,spread:.016,rec:.009,reload:2.5,cat:4},
+  m4a4:{id:'m4a4',name:'M4',kind:'rifle',slot:1,price:3100,dmg:33,rate:.09,mag:30,res:90,auto:true,spread:.018,rec:.013,reload:2.3,cat:4},
+  m4a1s:{id:'m4a1s',name:'M4A1',kind:'rifle',slot:1,price:2900,dmg:35,rate:.09,mag:25,res:75,auto:true,spread:.016,rec:.009,reload:2.5,cat:4},
   usp:{id:'usp',name:'USP-S',kind:'pistol',slot:2,price:200,dmg:30,rate:.17,mag:12,res:24,auto:false,spread:.009,rec:.014,reload:2.2},
   c4:{id:'c4',name:'C4',kind:'bomb',slot:5,price:0},
   knife:{id:'knife',name:'Faca',kind:'knife',slot:3,price:0,dmg:40,rate:.55,melee:true,range:2.4},
-  glock:{id:'glock',name:'Glock-18',kind:'pistol',slot:2,price:200,dmg:22,rate:.14,mag:20,res:120,auto:false,spread:.012,rec:.012,reload:2},
+  glock:{id:'glock',name:'G22',kind:'pistol',slot:2,price:200,dmg:22,rate:.14,mag:20,res:120,auto:false,spread:.012,rec:.012,reload:2},
   deagle:{id:'deagle',name:'Desert Eagle',kind:'pistol',slot:2,price:700,dmg:48,rate:.33,mag:7,res:35,auto:false,spread:.008,rec:.04,reload:2.2},
   mac10:{id:'mac10',name:'MAC-10',kind:'smg',slot:1,price:1050,dmg:23,rate:.075,mag:30,res:100,auto:true,spread:.028,rec:.008,reload:2.1,cat:3},
   p90:{id:'p90',name:'P90',kind:'smg',slot:1,price:2350,dmg:24,rate:.07,mag:50,res:100,auto:true,spread:.026,rec:.007,reload:2.6,cat:3},
-  nova:{id:'nova',name:'Nova',kind:'shotgun',slot:1,price:1050,dmg:15,rate:.85,mag:8,res:32,auto:false,spread:.055,rec:.05,reload:2.6,pellets:8,cat:3},
+  nova:{id:'nova',name:'FabM',kind:'shotgun',slot:1,price:1050,dmg:15,rate:.85,mag:8,res:32,auto:false,spread:.055,rec:.05,reload:2.6,pellets:8,cat:3},
   galil:{id:'galil',name:'Galil AR',kind:'rifle',slot:1,price:1800,dmg:31,rate:.09,mag:35,res:90,auto:true,spread:.02,rec:.011,reload:2.4,cat:4},
-  ak47:{id:'ak47',name:'AK-47',kind:'rifle',slot:1,price:2700,dmg:36,rate:.1,mag:30,res:90,auto:true,spread:.019,rec:.016,reload:2.4,cat:4},
-  ssg08:{id:'ssg08',name:'SSG 08',kind:'sniper',slot:1,price:1700,dmg:88,rate:1.2,mag:10,res:90,auto:false,spread:.002,rec:.04,reload:3.1,cat:4},
-  awp:{id:'awp',name:'AWP',kind:'sniper',slot:1,price:4750,dmg:125,rate:1.4,mag:5,res:30,auto:false,spread:.001,rec:.06,reload:3.5,cat:4}
+  ak47:{id:'ak47',name:'AKR',kind:'rifle',slot:1,price:2700,dmg:36,rate:.1,mag:30,res:90,auto:true,spread:.019,rec:.016,reload:2.4,cat:4},
+  ssg08:{id:'ssg08',name:'M40',kind:'sniper',slot:1,price:1700,dmg:88,rate:1.2,mag:10,res:90,auto:false,spread:.002,rec:.04,reload:3.1,cat:4},
+
+  p350:{id:'p350',name:'P350',kind:'pistol',slot:2,price:300,dmg:32,rate:.16,mag:13,res:52,auto:false,spread:.01,rec:.015,reload:2.2},
+  fiveseven:{id:'fiveseven',name:'Five-Seven',kind:'pistol',slot:2,price:500,dmg:25,rate:.12,mag:20,res:100,auto:false,spread:.011,rec:.011,reload:2.1},
+  tec9:{id:'tec9',name:'TEC-9',kind:'pistol',slot:2,price:500,dmg:24,rate:.1,mag:24,res:120,auto:false,spread:.016,rec:.013,reload:2.2},
+  berettas:{id:'berettas',name:'Dual Berettas',kind:'pistol',slot:2,price:400,dmg:21,rate:.09,mag:30,res:120,auto:false,spread:.02,rec:.013,reload:3.6,dual:true},
+  ump45:{id:'ump45',name:'UMP45',kind:'smg',slot:1,price:1200,dmg:30,rate:.09,mag:25,res:100,auto:true,spread:.024,rec:.009,reload:2.3,cat:3},
+  mp5:{id:'mp5',name:'MP5',kind:'smg',slot:1,price:1500,dmg:27,rate:.075,mag:30,res:120,auto:true,spread:.022,rec:.008,reload:2.2,cat:3},
+  mp7:{id:'mp7',name:'MP7',kind:'smg',slot:1,price:1700,dmg:25,rate:.068,mag:30,res:120,auto:true,spread:.02,rec:.008,reload:2.1,cat:3},
+  uzi:{id:'uzi',name:'Akimbo Uzi',kind:'smg',slot:1,price:1800,dmg:20,rate:.05,mag:50,res:150,auto:true,spread:.034,rec:.009,reload:3.4,cat:3,dual:true},
+  famas:{id:'famas',name:'FAMAS',kind:'rifle',slot:1,price:2050,dmg:28,rate:.08,mag:25,res:90,auto:true,spread:.02,rec:.011,reload:2.3,cat:4},
+  m16:{id:'m16',name:'M16',kind:'rifle',slot:1,price:3000,dmg:34,rate:.11,mag:30,res:90,auto:true,spread:.016,rec:.012,reload:2.4,cat:4},
+  fal:{id:'fal',name:'FN FAL',kind:'rifle',slot:1,price:3200,dmg:40,rate:.13,mag:20,res:80,auto:true,spread:.017,rec:.02,reload:2.6,cat:4},
+  val:{id:'val',name:'VAL',kind:'rifle',slot:1,price:3250,dmg:32,rate:.075,mag:30,res:90,auto:true,spread:.017,rec:.008,reload:2.4,cat:4},
+  akr12:{id:'akr12',name:'AKR12',kind:'rifle',slot:1,price:2800,dmg:34,rate:.088,mag:30,res:90,auto:true,spread:.018,rec:.013,reload:2.3,cat:4},
+  sm1014:{id:'sm1014',name:'SM1014',kind:'shotgun',slot:1,price:1850,dmg:14,rate:.28,mag:7,res:32,auto:true,spread:.06,rec:.045,reload:3,pellets:8,cat:3},
+  spas:{id:'spas',name:'SPAS',kind:'shotgun',slot:1,price:2000,dmg:16,rate:.5,mag:8,res:32,auto:false,spread:.05,rec:.05,reload:3.1,pellets:9,cat:3},
+  m60:{id:'m60',name:'M60',kind:'rifle',slot:1,price:4200,dmg:32,rate:.085,mag:100,res:200,auto:true,spread:.028,rec:.012,reload:5.5,cat:4},
+  m110:{id:'m110',name:'M110',kind:'sniper',slot:1,price:3600,dmg:85,rate:.5,mag:10,res:40,auto:false,spread:.002,rec:.03,reload:3,cat:4},
+  mallard:{id:'mallard',name:'Mallard',kind:'sniper',slot:1,price:3400,dmg:100,rate:1.1,mag:5,res:30,auto:false,spread:.0015,rec:.05,reload:3.3,cat:4},
+  awp:{id:'awp',name:'AWM',kind:'sniper',slot:1,price:4750,dmg:125,rate:1.4,mag:5,res:30,auto:false,spread:.001,rec:.06,reload:3.5,cat:4}
 };
 /* Skins do inventário (apenas visuais: cores do modelo em primeira pessoa) */
 const SKINS=[
@@ -2359,10 +2378,24 @@ const SKINS=[
   {id:'ssg_ice',w:'ssg08',n:'Frozen Scope',r:'Épica',rc:'#a259ff',price:1850,c1:'#bfe6ff',c2:'#3a8ad8'},
   {id:'knife_neon',w:'knife',n:'Neon Blade',r:'Lendária',rc:'#ff5fbf',price:4000,c1:'#10142a',c2:'#3dffd0'},
   {id:'knife_hex',w:'knife',n:'Hex Steel',r:'Épica',rc:'#a259ff',price:2500,c1:'#1a2230',c2:'#7aa0ff'},
-  {id:'knife_gold',w:'knife',n:'Midas Edge',r:'Dourada',rc:'#ffc83d',price:30000,c1:'#e0b020',c2:'#7a5a10'}
+  {id:'knife_gold',w:'knife',n:'Midas Edge',r:'Dourada',rc:'#ffc83d',price:30000,c1:'#e0b020',c2:'#7a5a10'},
+  {id:'knife_karambit',w:'knife',n:'Karambit',r:'Mítica',rc:'#ff4d4d',price:12500,c1:'#9aa5b1',c2:'#2a2a2a',kn:'karambit'},
+  {id:'knife_jkommando',w:'knife',n:'jKommando',r:'Rara',rc:'#3d5afe',price:6500,c1:'#4a5a30',c2:'#1a1a1a',kn:'jkommando'},
+  {id:'knife_butterfly',w:'knife',n:'Butterfly',r:'Lendária',rc:'#ff5fbf',price:11000,c1:'#c0c6cc',c2:'#2a2a2a',kn:'butterfly'},
+  {id:'knife_flip',w:'knife',n:'FlipKnife',r:'Épica',rc:'#a259ff',price:5500,c1:'#b9bec4',c2:'#2a2a2a',kn:'flipknife'},
+  {id:'knife_kunai',w:'knife',n:'Kunai',r:'Épica',rc:'#a259ff',price:5000,c1:'#2a2f36',c2:'#7aa0ff',kn:'kunai'},
+  {id:'knife_scorpion',w:'knife',n:'Scorpion',r:'Lendária',rc:'#ff5fbf',price:7500,c1:'#c8861a',c2:'#1a1a1a',kn:'scorpion'},
+  {id:'knife_tanto',w:'knife',n:'Tanto',r:'Rara',rc:'#3d5afe',price:6000,c1:'#a8aeb4',c2:'#1a1a1a',kn:'tanto'},
+  {id:'knife_daggers',w:'knife',n:'Daggers',r:'Mítica',rc:'#ff4d4d',price:8500,c1:'#b9bec4',c2:'#a01818',kn:'daggers'},
+  {id:'knife_kukri',w:'knife',n:'Kukri',r:'Rara',rc:'#3d5afe',price:7000,c1:'#8a6a3a',c2:'#2a1a0a',kn:'kukri'}
 ];
+/* skin Padrão automática p/ as armas novas (inventário/loja/miniaturas) */
+(()=>{const C={pistol:['#25282c','#111'],smg:['#2a2d31','#15171a'],rifle:['#33363a','#222'],sniper:['#33363a','#222'],shotgun:['#33363a','#222']};
+  Object.keys(W).forEach(id=>{const w=W[id];if(!C[w.kind]||SKINS.some(s=>s.w===id&&s.n==='Default'))return;
+    SKINS.push({id:id+'_def',w:id,n:'Default',r:'Padrão',rc:'#9aa5b1',c1:C[w.kind][0],c2:C[w.kind][1]})})})();
 const eqSkins=Object.assign({},Store.get('skins',{}));
 const GSKINS=[
+  {id:'g_molotov_def',g:'molotov',n:'Default',r:'Padrão',rc:'#9aa5b1',c1:'#8a5a2b',c2:'#ff8a2a'},
   {id:'g_smoke_def',g:'smoke',n:'Default',r:'Padrão',rc:'#9aa5b1',c1:'#8a9099',c2:'#d5d8dc'},
   {id:'g_flash_def',g:'flash',n:'Default',r:'Padrão',rc:'#9aa5b1',c1:'#cfd3d8',c2:'#ffffff'},
   {id:'g_frag_def',g:'frag',n:'Default',r:'Padrão',rc:'#9aa5b1',c1:'#3d5a2a',c2:'#ff9a30'},
@@ -2385,7 +2418,7 @@ const GSKINS=[
   {id:'g_frag_crimson',g:'frag',n:'HE Carmesim',r:'Mítica',rc:'#ff4d4d',price:5250,c1:'#a01020',c2:'#ff3030'},
   {id:'g_frag_gold',g:'frag',n:'HE Dourada',r:'Dourada',rc:'#ffc83d',price:13000,c1:'#d9a520',c2:'#ffe070'}
 ];
-const GN={smoke:'Granada de Fumaça',flash:'Flashbang',frag:'Granada HE'};
+const GN={smoke:'Granada de Fumaça',flash:'Flashbang',frag:'Granada HE',molotov:'Molotov / Termita'};
 const eqG=Object.assign({},Store.get('gskin',{}));
 const gSkin=t=>GSKINS.find(x=>x.g===t&&x.id===eqG[t]&&isOwned(x))||GSKINS.find(x=>x.g===t&&x.n==='Default');
 const gHex=c=>parseInt(c.slice(1),16);
@@ -2745,6 +2778,12 @@ function buildNade(skin, env){
     add(new THREE.CylinderGeometry(.072,.072,.03,32),met,0,.145,0);
     add(new THREE.CylinderGeometry(.072,.072,.03,32),met,0,-.145,0);
     add(new THREE.CylinderGeometry(.03,.03,.04,12),met,0,.18,0);
+  }else if(t==='molotov'){
+    const glass=new THREE.MeshPhysicalMaterial({color:0x6b4a22,roughness:.1,metalness:0,transparent:true,opacity:.82,envMap:E,envMapIntensity:1});
+    const liq=new THREE.MeshStandardMaterial({color:0xd98a1c,roughness:.3,emissive:0x5a2a00,emissiveIntensity:.5}),rag=new THREE.MeshStandardMaterial({color:0xcbb48a,roughness:.9});
+    add(new THREE.CylinderGeometry(.06,.065,.17,20),glass,0,-.03,0);add(new THREE.CylinderGeometry(.05,.05,.11,16),liq,0,-.06,0);
+    add(new THREE.CylinderGeometry(.03,.06,.07,16),glass,0,.085,0);add(new THREE.CylinderGeometry(.022,.022,.07,12),glass,0,.15,0);
+    add(new THREE.CylinderGeometry(.014,.01,.09,8),rag,0,.2,0,0,.12);
   }else{ // smoke
     add(new THREE.CylinderGeometry(.075,.075,.24,32,8),body,0,0,0);
     add(new THREE.CylinderGeometry(.0775,.0775,.05,32),acc,0,-.02,0);
@@ -2779,7 +2818,7 @@ const GLBX=(()=>{
   const FILE={"ak47": "w_ak47.glb", "m4a4": "w_m4a4.glb", "m4a1s": "w_m4a1s.glb", "awp_boom": "w_awp_boom.glb", "awp_egypt": "w_awp_egypt.glb", "deagle": "w_deagle.glb", "fiveseven": "w_fiveseven.glb", "mp7": "w_mp7.glb", "parafal": "w_parafal.glb", "knife": "w_knife.glb", "char_zone9": "char_zone9.glb", "char_province": "char_province.glb", "char_archie": "char_archie.glb", "char_dummy": "char_dummy.glb"},META={"ak47": {"muzzle": -0.64, "grip": [0, -0.09, -0.032], "fore": [0, -0.017, -0.346]}, "m4a4": {"muzzle": -0.78, "grip": [0, -0.1, -0.16], "fore": [0, -0.017, -0.47]}, "m4a1s": {"muzzle": -0.78, "grip": [0, -0.1, -0.18], "fore": [0, -0.017, -0.49]}, "awp_boom": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "awp_egypt": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "deagle": {"muzzle": -0.2, "grip": [0, -0.066, 0.013], "fore": [0, -0.068, -0.005]}, "fiveseven": {"muzzle": -0.13, "grip": [0, -0.063, 0.048], "fore": [0, -0.065, 0.03]}, "mp7": {"muzzle": -0.31, "grip": [0, -0.075, 0.043], "fore": [0, -0.05, -0.164]}, "parafal": {"muzzle": -0.73, "grip": [0, -0.1, -0.09], "fore": [0, -0.017, -0.43]}, "knife": {"muzzle": -0.34, "grip": [0, 0, -0.04], "fore": [0, 0, -0.04]}},RIG={"char_zone9": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, -0.0], "chest": [0.0, 1.281, -0.0], "neck": [0.0, 1.503, -0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.37, 1.231, -0.05], "handN": [-0.557, 1.075, 0.048], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.37, 1.231, -0.05], "handP": [0.557, 1.075, 0.048], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, -0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_province": {"pelvis": [0.0, 0.967, 0.0], "spine": [0.0, 1.058, -0.0], "chest": [0.0, 1.299, -0.0], "neck": [0.0, 1.522, -0.0], "head": [0.0, 1.607, 0.017], "clavN": [-0.081, 1.459, -0.011], "uarmN": [-0.185, 1.463, -0.011], "farmN": [-0.373, 1.248, -0.051], "handN": [-0.561, 1.091, 0.049], "clavP": [0.081, 1.459, -0.011], "uarmP": [0.185, 1.463, -0.011], "farmP": [0.373, 1.248, -0.051], "handP": [0.561, 1.091, 0.049], "thighN": [-0.124, 0.967, 0.0], "calfN": [-0.142, 0.53, 0.013], "footN": [-0.161, 0.116, -0.033], "thighP": [0.124, 0.967, -0.0], "calfP": [0.142, 0.53, 0.013], "footP": [0.161, 0.116, -0.033]}, "char_archie": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_dummy": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}};
   const BN=['pelvis','spine','chest','neck','head','clavN','uarmN','farmN','handN','clavP','uarmP','farmP','handP','thighN','calfN','footN','thighP','calfP','footP'];
   const PAR=[-1,0,1,2,3,2,5,6,7,2,9,10,11,0,13,14,0,16,17];
-  const WMAP={ak47:'ak47',m4a4:'m4a4',m4a1s:'m4a1s',awp:'awp_boom',mac10:'mp7',galil:'parafal',deagle:'deagle',glock:'fiveseven',usp:'fiveseven',knife:'knife'};
+  const WMAP={ak47:'ak47',m4a4:'m4a4',m4a1s:'m4a1s',awp:'awp_boom',deagle:'deagle',fiveseven:'fiveseven',mp7:'mp7',fal:'parafal',knife:'knife'};
   const CMAP={T:['char_zone9','char_archie'],CT:['char_province','char_archie']};
   let loader=null,hookT=0,invis=null;
   const warn=(...a)=>console.warn('[GLB]',...a);
@@ -2859,9 +2898,10 @@ const GLBX=(()=>{
         const M=g.matrix,gT=g.userData.grip.clone().applyMatrix4(M);
         if(ap.H.distanceTo(gT)<.03){
           const fw=new V3c(0,0,-1).transformDirection(M),sd=new V3c(1,0,0).transformDirection(M);if(sd.x<0)sd.negate();
-          const kn=id==='knife',pi=W[id].kind==='pistol',dwn=(y)=>new V3c(0,y,0);
+          const du=!!g.userData.dual,kn=id==='knife',pi=W[id].kind==='pistol',dwn=(y)=>new V3c(0,y,0);
           const TP=gT.clone().addScaledVector(sd,.045).addScaledVector(fw,-.07).add(dwn(-.005));let TN,hdN=fw,poleN,poleP;
-          if(kn){TN=gT.clone().add(dwn(-.04));poleN=[-.5,-1,-.1];poleP=[.3,-1,-.2]}
+          if(du){const f2=g.userData.fore.clone().applyMatrix4(M);TN=f2.addScaledVector(sd,-.045).addScaledVector(fw,-.07);poleN=[-.5,-1,-.2];poleP=[.3,-1,-.2]}
+          else if(kn){TN=gT.clone().add(dwn(-.04));poleN=[-.5,-1,-.1];poleP=[.3,-1,-.2]}
           else if(pi){TN=TP.clone().add(new V3c(-.07,-.05,-.06));hdN=new V3c(.6,.15,.8).normalize();poleN=[-.5,-1,-.3];poleP=[.3,-1,-.2]}
           else{const fo=g.userData.fore.clone();fo.z*=(o._fz||.7);fo.applyMatrix4(M);TN=fo.add(dwn(-.05)).addScaledVector(fw,-.08);poleN=[-.5,-1,-.1];poleP=[.4,-1,-.6]}
           tg[1]={T:TP,hd:fw,pole:poleP};tg[0]={T:TN,hd:hdN,pole:poleN}}}
@@ -2927,11 +2967,45 @@ const GLBX=(()=>{
     const rest=ALL.filter(k=>first.indexOf(k)<0);
     setTimeout(()=>warm(Array.from(new Set(first.concat(rest)))).catch(()=>{}),1200)}
   return{ensure,gun,dressBot,warm,boot,ok,cache}})();
+/* modelos de apoio (fallback blocky): aliases das armas sem GLB, facas (variantes), pares (dual) */
+const BLK_ALIAS={p350:'usp',tec9:'glock',berettas:'usp',fiveseven:'glock',ump45:'mac10',mp5:'mac10',mp7:'mac10',uzi:'mac10',famas:'m4a4',m16:'m4a4',fal:'ak47',val:'m4a1s',akr12:'ak47',sm1014:'nova',spas:'nova',m60:'m4a4',m110:'ssg08',mallard:'awp'};
+const KNV={karambit:{L:.19,pts:[[0,.022],[.05,.03],[.11,.012],[.16,-.035],[.19,-.095],[.13,-.06],[.07,-.035],[0,-.022]],ring:1},
+  jkommando:{L:.2,pts:[[0,.022],[.17,.026],[.21,0],[.17,-.014],[0,-.022]]},
+  butterfly:{L:.14,pts:[[0,.02],[.1,.024],[.15,0],[.1,-.014],[0,-.02]],bal:1},
+  flipknife:{L:.15,pts:[[0,.02],[.11,.03],[.16,.005],[.1,-.014],[0,-.02]]},
+  kunai:{L:.17,pts:[[0,0],[.04,.034],[.12,.036],[.19,0],[.12,-.036],[.04,-.034]],ring:1},
+  scorpion:{L:.19,pts:[[0,.02],[.1,.026],[.19,0],[.1,-.026],[0,-.02]]},
+  tanto:{L:.19,pts:[[0,.024],[.15,.024],[.2,-.012],[0,-.024]]},
+  daggers:{L:.15,pts:[[0,.018],[.1,.02],[.16,0],[.1,-.02],[0,-.018]],dual:1},
+  kukri:{L:.27,pts:[[0,.016],[.09,.032],[.19,.05],[.27,0],[.19,-.02],[.09,-.016],[0,-.014]]}};
+function knifeVariant(kn,sk,vm,slots){
+  const d=KNV[kn];if(!d)return null;const E=Env.get();
+  let mS=skinMaterial(sk,E),mM=new THREE.MeshPhysicalMaterial({color:0x1a1c20,roughness:.3,metalness:.8,envMap:E,envMapIntensity:.9});
+  const ov=slots||(sk.parts?resolveParts(sk):null);if(ov){mS=partMat(ov.S,E)||mS;mM=partMat(ov.M,E)||mM}
+  const mG=new THREE.MeshStandardMaterial({color:0x1b1d20,roughness:.6,metalness:.2}),g=new THREE.Group();
+  const add=(geo,m,x,y,z)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);if(vm)o.renderOrder=999;else o.castShadow=true;g.add(o);return o};
+  const blade=(x)=>{const sh=new THREE.Shape();d.pts.forEach((p,i)=>i?sh.lineTo(p[0],p[1]):sh.moveTo(p[0],p[1]));
+    const bg=new THREE.ExtrudeGeometry(sh,{depth:.008,bevelEnabled:true,bevelSize:.002,bevelThickness:.002,bevelSegments:1});bg.translate(0,0,-.004);bg.rotateY(Math.PI/2);
+    try{UVP(bg,0)}catch(_){}return add(bg,mS,x,0,0)};
+  const offs=d.dual?[-.035,.035]:[0];
+  offs.forEach(x=>{blade(x);
+    if(d.bal){[-.012,.012].forEach(q=>add(new THREE.BoxGeometry(.01,.028,.13),mG,x+q,0,.075))}
+    else add(new THREE.BoxGeometry(.022,.03,.13),mG,x,0,.075);
+    add(new THREE.BoxGeometry(.03,.05,.012),mM,x,0,.004);
+    if(d.ring)add(new THREE.TorusGeometry(.022,.005,8,16),mM,x,0,.15).rotation.y=Math.PI/2});
+  g.userData={grip:new THREE.Vector3(0,0,.07),fore:new THREE.Vector3(0,0,.07),muzzle:-(d.L+.02),knife:kn};
+  return g}
+function dualize(g){const o=new THREE.Group(),b=g.clone(true),ud=g.userData;b.position.x=-.085;o.add(g,b);
+  o.userData=Object.assign({},ud,{grip:ud.grip.clone(),fore:ud.grip.clone().add(new THREE.Vector3(-.085,0,0)),dual:true});return o}
 function weaponModel(id,skinId,vm,slots){
-  try{const g=GLBX.gun(id,skinId,vm,slots);if(g)return g}catch(e){console.warn('[GLB] arma',id,e)}
-  return weaponModelBlocky(id,skinId,vm,slots)}
+  const sk=SKINS.find(s=>s.id===skinId);let g=null;
+  try{g=(id==='knife'&&sk&&sk.kn)?knifeVariant(sk.kn,sk,vm,slots):GLBX.gun(id,skinId,vm,slots)}catch(e){console.warn('[GLB] arma',id,e)}
+  if(!g)g=weaponModelBlocky(id,skinId,vm,slots);
+  if(W[id]&&W[id].dual)g=dualize(g);
+  return g}
 
 function weaponModelBlocky(id,skinId,vm,slots){
+  id=BLK_ALIAS[id]||id;
   const sk=SKINS.find(s=>s.id===skinId)||SKINS.find(s=>s.id===defSkin(id))||{id:'x_'+id,c1:'#444',c2:'#888'};
   const mk=o=>new THREE.MeshPhysicalMaterial(o);
   const E=Env.get(),wd=['ak47','nova','ssg08'].includes(id)&&sk.n==='Default';
@@ -3293,7 +3367,7 @@ function makeBotMesh(team,ag,det){
     setWeapon(id,skinId){this._w=[id,skinId];
       if(gunG)tor.remove(gunG);
       gunG=weaponModel(id,skinId,false);if(!det){mergeByMaterial(gunG);gunG.traverse(o=>{if(o.isMesh)o.castShadow=false})}gunG.scale.setScalar(.85);   // fuzil ~0,97 m
-      const pist=W[id].kind==='pistol'||id==='knife';
+      const pist=W[id].kind==='pistol'||id==='knife'||!!W[id].dual;
       gunG.position.set((pist?.07:.13)+(pist?(this._gxp||0):(this._gx||0)),(pist?.46:.52)+(pist?(this._gyp||0):(this._gy||0)),(pist?.34:.4)+(pist?(this._gzp||0):(this._gz||0)));gunG.rotation.y=pist?Math.PI:Math.PI-(this._gry===undefined?.3:this._gry);      // cano para a frente (+Z do boneco)
       tor.add(gunG);gunG.updateMatrix();const ud=gunG.userData;
       pose(arms[1],ud.grip.clone().applyMatrix4(gunG.matrix));
@@ -3437,7 +3511,7 @@ const Thumb={r:null,sc:null,cam:null,cache:{},
     S.m.querySelector('#inCl').onclick=()=>S.close(done);S.start()},
   nadeModel(g){return buildNade(g)},
   inspectNade(id,done){
-    const g=GSKINS.find(x=>x.id===id),rc=g.rc,c2=gHex(g.c2),DS={smoke:'Libera uma densa nuvem na cor da skin que bloqueia a visão por 16 segundos.',flash:'Estoura em um clarão cegante; a cor da skin tinge as faíscas.',frag:'Explode em bola de fogo e estilhaços; a cor da skin tinge as chamas.'};
+    const g=GSKINS.find(x=>x.id===id),rc=g.rc,c2=gHex(g.c2),DS={smoke:'Libera uma densa nuvem na cor da skin que bloqueia a visão por 16 segundos.',flash:'Estoura em um clarão cegante; a cor da skin tinge as faíscas.',frag:'Explode em bola de fogo e estilhaços; a cor da skin tinge as chamas.',molotov:'Estoura em chamas que queimam a área por 7 segundos.'};
     const S=this.stage(`<b style="font-size:16px;display:block;line-height:1.1">${GN[g.g]}<br>${g.n}</b><small style="color:${rc}">${g.r}</small>`,rc,DS[g.g],`<div class="pb"><button id="gBoom" style="color:var(--gold)">▶ DETONAR</button></div><small class="ihint" style="margin:0">Arraste para girar</small>`);
     const nm=this.nadeModel(g);nm.position.y=.4;S.sc.add(nm);S.dist=2.4;S.tgt.set(0,.4,0);S.pit=.18;
     const sph=new THREE.SphereGeometry(1,14,10),parts=[],O=V3(0,.4,0);let boom=false,spin=0;
@@ -3466,17 +3540,18 @@ const Thumb={r:null,sc:null,cam:null,cache:{},
 };
 
 /* ---------------- Granadas (fragmentação e flash) ---------------- */
-const Nade={list:[],
+const Nade={list:[],fires:[],
   throw(owner,type,o,v){const gs=owner&&owner.isPlayer?gSkin(type):null;const m=buildNade(gs||{g:type,id:'',n:'Default',c1:'#4b5320',c2:'#4b5320'});m.scale.setScalar(.5);
-    m.position.copy(o);World.scene.add(m);this.list.push({m,v:v.clone(),t:type==='frag'?1.7:type==='smoke'?1.5:1.3,type,owner,gs});Snd.tone(260,.05,.1)},
-  clear(){this.list.forEach(n=>World.scene.remove(n.m));this.list=[];World.smokes.forEach(q=>{World.scene.remove(q.m);try{q.m.geometry.dispose();q.m.material.dispose()}catch(_){}});World.smokes=[]},   // [FIX-GPU] fumaça libera geometria/material
-  update(dt){World.smokes=World.smokes.filter(q=>{q.t-=dt;if(q.t<=0){World.scene.remove(q.m);try{q.m.geometry.dispose();q.m.material.dispose()}catch(_){}return false}return true});
+    m.position.copy(o);World.scene.add(m);this.list.push({m,v:v.clone(),t:type==='frag'?1.7:type==='smoke'?1.5:type==='molotov'?1.15:1.3,type,owner,gs});Snd.tone(260,.05,.1)},
+  clear(){this.fires.forEach(f=>World.scene.remove(f.m));this.fires=[];this.list.forEach(n=>World.scene.remove(n.m));this.list=[];World.smokes.forEach(q=>{World.scene.remove(q.m);try{q.m.geometry.dispose();q.m.material.dispose()}catch(_){}});World.smokes=[]},   // [FIX-GPU] fumaça libera geometria/material
+  update(dt){try{this.fireTick(dt)}catch(_){}World.smokes=World.smokes.filter(q=>{q.t-=dt;if(q.t<=0){World.scene.remove(q.m);try{q.m.geometry.dispose();q.m.material.dispose()}catch(_){}return false}return true});
     for(let i=this.list.length-1;i>=0;i--){const n=this.list[i],p=n.m.position;n.t-=dt;n.v.y-=16*dt;const ox=p.x,oz=p.z;p.addScaledVector(n.v,dt);
       {const gy=(World.hg||World.low)?groundAt(p,p.y+.1)+.08:.08;if(p.y<gy){p.y=gy;if(n.v.y<0)n.v.y*=-.35;n.v.x*=.8;n.v.z*=.8}}
       for(const b of World.colliders){if(World.hg&&b.st)continue;if(p.y<b.h&&p.x>b.minX-.07&&p.x<b.maxX+.07&&p.z>b.minZ-.07&&p.z<b.maxZ+.07){
         if(ox<=b.minX-.07||ox>=b.maxX+.07){p.x=ox;n.v.x*=-.45}else{p.z=oz;n.v.z*=-.45}break}}
       if(n.t<=0){this.boom(n);World.scene.remove(n.m);this.list.splice(i,1)}}},
   boom(n){const p=n.m.position.clone();p.y=Math.max(p.y,.3);const fr=n.type==='frag',gc=n.gs?gHex(n.gs.c2):0;
+    if(n.type==='molotov'){this.fire(n,p);return}
     if(n.type==='smoke'){const sm=new THREE.Mesh(new THREE.SphereGeometry(3.6,16,12),new THREE.MeshBasicMaterial({color:gc||0xd5d8dc,transparent:true,opacity:.93,side:THREE.DoubleSide,depthWrite:false}));sm.position.set(p.x,1.6,p.z);World.scene.add(sm);World.smokes.push({m:sm,t:16,c:sm.position.clone(),r:3.6});try{BotBrain.nadeEnd(n,p,null)}catch(_){}return}
     for(let k=0;k<7;k++)FX.puff(p.clone().add(V3(rnd(-1,1),rnd(0,1.2),rnd(-1,1))),fr?(k%2?(gc||0xff9a30):0x555555):(gc||0xffffff));
     Snd.shot(clamp(1-Player.pos.distanceTo(p)/45,.1,1),true);
@@ -3488,7 +3563,17 @@ const Nade={list:[],
         if(e.isPlayer){const f=V3();World.camera.getWorldDirection(f);const to=p.clone().sub(World.camera.position).normalize();e.flashT=(f.dot(to)>0?3.2:1)*(1-d/56)+.2;$('#flashO').style.opacity=1;bt=e.flashT}
         else{e.blind=2.8*(1-d/56)+.3;bt=e.blind}
         if(bt>=1){if(e===n.owner)R.blindSelf=1;else if(e.team!==n.owner.team)R.blind++}}}
-    try{BotBrain.nadeEnd(n,p,R)}catch(_){}}
+    try{BotBrain.nadeEnd(n,p,R)}catch(_){}},
+  fire(n,p){const g=new THREE.Group(),R=3.4;g.position.set(p.x,.06,p.z);
+    const disc=new THREE.Mesh(new THREE.CircleGeometry(R,28),new THREE.MeshBasicMaterial({color:0xff5a10,transparent:true,opacity:.38,depthWrite:false,side:THREE.DoubleSide}));disc.rotation.x=-Math.PI/2;g.add(disc);
+    for(let i=0;i<16;i++){const h=rnd(.9,1.8),r=rnd(.22,.4),c=new THREE.Mesh(new THREE.ConeGeometry(r,h,7),new THREE.MeshBasicMaterial({color:i%3?0xff8a1a:0xffd23a,transparent:true,opacity:.78,depthWrite:false}));
+      const a=rnd(0,6.283),d=Math.sqrt(Math.random())*R*.92;c.position.set(Math.cos(a)*d,h/2,Math.sin(a)*d);c.userData={fl:1,h};g.add(c)}
+    World.scene.add(g);this.fires.push({m:g,p:V3(p.x,0,p.z),r:R,t:7,k:0,tick:0,owner:n.owner});Snd.shot(clamp(1-Player.pos.distanceTo(p)/45,.1,1),false);try{BotBrain.nadeEnd(n,p,null)}catch(_){}},
+  fireTick(dt){for(let i=this.fires.length-1;i>=0;i--){const f=this.fires[i];f.t-=dt;f.k+=dt;
+    f.m.children.forEach((c,j)=>{if(c.userData.fl){const s=1+Math.sin(f.k*9+j*1.7)*.28;c.scale.set(1,s,1);c.position.y=c.userData.h*s/2}});
+    f.tick-=dt;if(f.tick<=0){f.tick=.5;for(const e of Game.bots.filter(b=>b.alive).concat(Player.alive?[Player]:[])){
+      if(Math.hypot(e.pos.x-f.p.x,e.pos.z-f.p.z)<f.r){let dm=9;if(f.owner&&e!==f.owner&&e.team===f.owner.team)dm*=.4;try{e.takeHit(dm,f.owner,false,'Molotov',f.p)}catch(_){}}}}
+    if(f.t<=0){World.scene.remove(f.m);this.fires.splice(i,1)}}}
 };
 
 /* ---------------- Bot (IA) ---------------- */
@@ -4091,7 +4176,7 @@ class Bot{
       if(w&&w.slot===1&&(w.cat||0)>=3&&!this.vis&&!(this.spotted>0)){const al=mates.find(m=>!m.pri);   // aliado só com pistola/faca
         if(al&&Math.random()<BotBrain.dropP(this,.5)){const dp=this.dropSpot(al.p);Drops.drop(this.wid,dp.x,dp.z,null,true,defSkin(this.wid));this.wid=this.team==='CT'?'usp':'glock';this.m.setWeapon(this.wid,defSkin(this.wid));this.noPick=20;
           BotBrain.ev(this,'dropW',25,2);BotBrain.glog(this,'drop','arma',dp.x,dp.z,'largou',25);this.helpMate(al,dp,'weapon');return}}
-      for(const t of['frag','flash','smoke']){if(!(this.gn[t]>0)||this.vis)continue;   // divide granada: prioridade a quem está sem nenhuma
+      for(const t of['frag','flash','smoke','molotov']){if(!(this.gn[t]>0)||this.vis)continue;   // divide granada: prioridade a quem está sem nenhuma
         const al=mates.find(m=>m.gn&&m.ng===0)||(this.gn[t]>=2?mates.find(m=>m.gn&&m.gn[t]===0):null);
         if(al&&Math.random()<BotBrain.dropP(this,.35)){this.gn[t]--;if(t==='frag')this.nd=this.gn.frag;const dp=this.dropSpot(al.p);Drops.drop(t,dp.x,dp.z,null,false,null);this.noPick=20;
           BotBrain.ev(this,'dropG',15,3);BotBrain.glog(this,'drop',t,dp.x,dp.z,'largou',15);this.helpMate(al,dp,'nade');return}}}
@@ -4216,15 +4301,15 @@ try{Object.keys(localStorage).filter(k=>k.indexOf('ts2_clone_')===0).forEach(k=>
 const Player={
   pos:V3(0,0,0),vy:0,yaw:0,pitch:0,hp:100,armor:0,helmet:false,vestP:0,helmP:0,alive:true,isPlayer:true,team:'T',money:1200,
   loadout:{primary:null,pistol:'glock',knife:'knife'},cur:'glock',ammo:{},cd:0,reloading:false,rt:0,crouch:0,crouchOn:false,
-  moving:false,air:false,bloom:0,kills:0,headshots:0,objectiveDone:false,vm:null,vmKick:0,bob:0,jumpQ:false,nades:{frag:0,flash:0,smoke:0},kit:false,flashT:0,scoped:false,actT:0,
+  moving:false,air:false,bloom:0,kills:0,headshots:0,objectiveDone:false,vm:null,vmKick:0,bob:0,jumpQ:false,nades:{frag:0,flash:0,smoke:0,molotov:0},kit:false,flashT:0,scoped:false,actT:0,
   get w(){return W[this.cur]||NW[this.cur]},
   eyeY(){return this.pos.y+1.6-.53*this.crouch},
   reset(sp,keep){this.setScope(false);this.flashT=0;$('#flashO').style.opacity=0;this.actT=0;$('#actBar').style.display='none';this.pos.set(sp[0],sp[2]||0,sp[1]);this.vy=0;this.hp=100;this.hitBy=null;this.alive=true;this.cd=0;this.reloading=false;this.crouch=0;this.crouchOn=false;this.bloom=0;
     this.yaw=World.spYaw?World.spYaw(this.team,sp):(this.team==='T'?0:Math.PI);this.pitch=0;
     /* kills/headshots/objectiveDone são totais da PARTIDA: zerados em Game.start, não a cada round */
-    if(!keep){const pp=this.team==='CT'?'usp':'glock';this.loadout={primary:null,pistol:pp,knife:'knife'};this.armor=0;this.helmet=false;this.vestP=0;this.helmP=0;this.nades={frag:0,flash:0,smoke:0};this.kit=false;this.ammo={};this.giveAmmo(pp)}else{[this.loadout.primary,this.loadout.pistol].forEach(id=>{if(id)this.giveAmmo(id)})}
+    if(!keep){const pp=this.team==='CT'?'usp':'glock';this.loadout={primary:null,pistol:pp,knife:'knife'};this.armor=0;this.helmet=false;this.vestP=0;this.helmP=0;this.nades={frag:0,flash:0,smoke:0,molotov:0};this.kit=false;this.ammo={};this.giveAmmo(pp)}else{[this.loadout.primary,this.loadout.pistol].forEach(id=>{if(id)this.giveAmmo(id)})}
     this.loadout.c4=null;this.equip(this.loadout.primary||this.loadout.pistol||this.loadout.knife)},
-  isNade(id){return id==='frag'||id==='flash'||id==='smoke'},
+  isNade(id){return id==='frag'||id==='flash'||id==='smoke'||id==='molotov'},
   prevW(){const ls=this.loadout,p=this.pw;return(p&&!this.isNade(p)&&[ls.primary,ls.pistol,ls.knife,ls.c4].includes(p))?p:(ls.primary||ls.pistol||ls.knife)},
   /* drop completo: fuzil, pistola, C4 e granadas (só a faca não cai) */
   dropItem(id,keep,force){if(!this.alive||!id||id==='knife'||Game.phase==='end'||Shop.open)return;const ls=this.loadout;
@@ -4376,11 +4461,11 @@ const Controls={mx:0,my:0,lookX:0,lookY:0,actHeld:false,fireHeld:false,fireQ:fal
 /* ---------------- HUD: botões táteis + editor de layout ---------------- */
 /* Preset de HUD "Sandstone CQB": centro livre, tiro/pulo/mira no polegar direito, granadas no topo, mapa grande. Aplica no editor; vale ao tocar em SALVAR. */
 const HUD_SS={
-  pos:{fire:[90,62],jump:[94,38],crouch:[80,86],scope:[74,58],act:[63,72],reload:[78,36],swap:[52,91],drop:[36,91],pick:[58,80],buy:[42,9],frag:[93,20],flash:[84,13],smoke:[75,13]},
-  bs:{fire:{sz:115,op:70},jump:{sz:90,op:60},crouch:{sz:80,op:55},scope:{sz:85,op:55},act:{sz:85,op:65},reload:{sz:70,op:45},swap:{sz:70,op:35},drop:{sz:55,op:30},pick:{sz:70,op:50},buy:{sz:55,op:35},frag:{sz:70,op:50},flash:{sz:65,op:45},smoke:{sz:65,op:45}},
+  pos:{fire:[90,62],jump:[94,38],crouch:[80,86],scope:[74,58],act:[63,72],reload:[78,36],swap:[52,91],drop:[36,91],pick:[58,80],buy:[42,9],frag:[93,20],flash:[84,13],smoke:[75,13],molotov:[66,13]},
+  bs:{fire:{sz:115,op:70},jump:{sz:90,op:60},crouch:{sz:80,op:55},scope:{sz:85,op:55},act:{sz:85,op:65},reload:{sz:70,op:45},swap:{sz:70,op:35},drop:{sz:55,op:30},pick:{sz:70,op:50},buy:{sz:55,op:35},frag:{sz:70,op:50},flash:{sz:65,op:45},smoke:{sz:65,op:45},molotov:{sz:65,op:45}},
   wp:{radar:{x:9,y:24,sz:100,op:90},ammo:{x:66,y:92,sz:100,op:80},money:{op:60},vitals:{op:85}}};
 const HUD={editing:false,
-  defaults:{fire:[88,66],jump:[95,38],crouch:[95,80],reload:[78,40],buy:[40,12],swap:[68,86],drop:[52,86],pick:[50,62],scope:[66,62],act:[58,46],frag:[62,22],flash:[52,22],smoke:[72,22]}, // % da tela
+  defaults:{fire:[88,66],jump:[95,38],crouch:[95,80],reload:[78,40],buy:[40,12],swap:[68,86],drop:[52,86],pick:[50,62],scope:[66,62],act:[58,46],frag:[62,22],flash:[52,22],smoke:[72,22],molotov:[42,22]}, // % da tela
   pos:Store.get('hudpos',{}),
   bs:Store.get('hudbtn',{}),   // tamanho/opacidade INDIVIDUAL por botão: {id:{sz,op}}
   sel:null,
@@ -4413,7 +4498,7 @@ const HUD={editing:false,
       const up=()=>{d=null};el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up)})},
   barPos:Store.get('hudbar',null),   // posição da barra do editor: [centro X %, topo Y %]
   applyBar(){const b=$('#editBar');if(b&&this.barPos){b.style.left=this.barPos[0]+'%';b.style.top=this.barPos[1]+'%'}},
-  NAMES:{fire:'FOGO',jump:'PULAR',crouch:'AGACHAR',reload:'RECARREGAR',buy:'COMPRAR',swap:'TROCAR',drop:'SOLTAR',pick:'PEGAR',scope:'MIRA',act:'AÇÃO',frag:'GRANADA',flash:'FLASH',smoke:'FUMAÇA'},
+  NAMES:{fire:'FOGO',jump:'PULAR',crouch:'AGACHAR',reload:'RECARREGAR',buy:'COMPRAR',swap:'TROCAR',drop:'SOLTAR',pick:'PEGAR',scope:'MIRA',act:'AÇÃO',frag:'GRANADA',flash:'FLASH',smoke:'FUMAÇA',molotov:'MOLOTOV'},
   apply(){$$('.hbtn').forEach(b=>{const id=b.dataset.id,p=this.pos[id]||this.defaults[id];b.style.left=p[0]+'%';b.style.top=p[1]+'%';
       const o=this.bs[id]||{},sz=o.sz!=null?o.sz:S.hudSize,op=o.op!=null?o.op:S.hudOpacity;   // individual > padrão global
       b.style.setProperty('--bs',sz/100);b.style.setProperty('--bo',op/100*.9);b.style.setProperty('--bo2',.4+op/100*.6)});
@@ -4426,7 +4511,7 @@ const HUD={editing:false,
       crouch:{down(b){if(S.crouchToggle){Controls.crouchHeld=!Controls.crouchHeld;b.classList.toggle('act',Controls.crouchHeld)}else Controls.crouchHeld=true},
         up(b){if(!S.crouchToggle){Controls.crouchHeld=false}}},
       reload:{down(){Player.reload()}},buy:{down(){Shop.toggle()}},swap:{down(){Player.swap()}},drop:{down(){Player.dropItem(Player.cur)}},pick:{down(){const d=Drops.cur;if(d&&Player.alive)Drops.take(d,Player)}},
-      scope:{down(){Player.setScope(!Player.scoped)}},act:{down(){Controls.actHeld=true},up(){Controls.actHeld=false}},frag:{down(){Player.throwNade('frag')}},flash:{down(){Player.throwNade('flash')}},smoke:{down(){Player.throwNade('smoke')}}};
+      scope:{down(){Player.setScope(!Player.scoped)}},act:{down(){Controls.actHeld=true},up(){Controls.actHeld=false}},frag:{down(){Player.throwNade('frag')}},flash:{down(){Player.throwNade('flash')}},smoke:{down(){Player.throwNade('smoke')}},molotov:{down(){Player.throwNade('molotov')}}};
     $$('.hbtn').forEach(b=>{const id=b.dataset.id;let drag=null;
       b.addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();Snd.init();const t=e.changedTouches[0];
         if(this.editing){ /* modo editor: seleciona o botão (painel de tamanho/opacidade) e começa a arrastar */
@@ -4550,8 +4635,8 @@ const SI={
 const Shop={open:false,
   items:{
     1:[{id:'vest',name:'Colete',price:500},{id:'helm',name:'Capacete',price:300},{id:'vesthelm',name:'Colete + Capacete',price:800},{id:'kit',name:'Kit desarme',price:400,ct:1}],
-    5:[{id:'flash',name:'Flashbang',price:200},{id:'smoke',name:'Granada de Fumaça',price:300},{id:'frag',name:'Granada HE',price:300}],
-    2:{T:['glock','deagle'],CT:['usp','deagle']},3:['mac10','p90','nova'],4:{T:['galil','ak47','ssg08','awp'],CT:['m4a1s','m4a4','ssg08','awp']}},
+    5:[{id:'flash',name:'Flashbang',price:200},{id:'smoke',name:'Granada de Fumaça',price:300},{id:'frag',name:'Granada HE',price:300},{id:'molotov',name:'Molotov / Termita',price:400}],
+    2:{T:['glock','tec9','p350','fiveseven','berettas','deagle'],CT:['usp','p350','fiveseven','tec9','berettas','deagle']},3:['mac10','ump45','mp5','mp7','p90','uzi','nova','sm1014','spas'],4:{T:['famas','galil','ak47','akr12','fal','m16','val','m60','ssg08','m110','awp','mallard'],CT:['famas','m4a1s','m4a4','akr12','fal','m16','val','m60','ssg08','m110','awp','mallard']}},
   canBuy(){return Player.alive&&(Game.phase==='buy'||Game.opts.eco==='treino')},
   toggle(){if(this.open)return this.close();
     if(!Player.alive)return;if(!this.canBuy()){Game.hint('Tempo de compra encerrado');return}this.open=true;this.render();$('#shop').classList.remove('hidden')},
@@ -4574,8 +4659,8 @@ const Shop={open:false,
     $('#shop').innerHTML=`<div id="shopBox"><div id="shopHead"><div><span class="m">$${Player.money}</span>${Game.phase==='buy'?'Tempo de compra restante '+Math.ceil(Game.timer)+'s':'Modo treino'}</div>
       <button class="btn" id="shClose">FECHAR</button></div><div id="shopCols">
       ${col('1 · Equipamentos',this.items[1].filter(x=>!x.ct||Player.team==='CT').map(eq).join(''))}
-      ${col('2 · Pistolas',this.items[2][Player.team].map(wi).join(''))}${col('3 · Intermediárias',this.items[3].map(wi).join(''))}
-      ${col('4 · Rifles',this.items[4][Player.team].map(wi).join(''))}
+      ${col('2 · Pistolas',this.items[2][Player.team].map(wi).join(''))}${col('3 · SMGs e Pesadas',this.items[3].map(wi).join(''))}
+      ${col('4 · Fuzis e Snipers',this.items[4][Player.team].map(wi).join(''))}
       ${col('5 · Granadas',this.items[5].map(eq).join(''))}
       </div></div>`;
     $('#shClose').onclick=()=>this.close();
@@ -4620,7 +4705,7 @@ const HUDui={dirty:true,rt:0,cache:{},
       $('#fps').textContent=S.fps?Math.min(60,Math.round(Game.fps))+' FPS':'';
       Ping.tick();if(!HUD.editing)Ping.paint($('#ping'),Ping.ms);   // [PING] estilo Free Fire: ícone de sinal + ms
       if(!HUD.editing){const vis=(id,v,t)=>{const b=$('.hbtn[data-id='+id+']');b.style.display=v?'':'none';if(t)b.textContent=t};
-        vis('scope',P.alive&&w.kind==='sniper');vis('frag',P.nades.frag>0,'GRANADA '+P.nades.frag);vis('flash',P.nades.flash>0,'FLASH '+P.nades.flash);vis('smoke',P.nades.smoke>0,'FUMAÇA '+P.nades.smoke);const cx=Game.actCtx();vis('act',!!cx,cx==='plant'?'PLANTAR':'DESARMAR')}
+        vis('scope',P.alive&&w.kind==='sniper');vis('frag',P.nades.frag>0,'GRANADA '+P.nades.frag);vis('flash',P.nades.flash>0,'FLASH '+P.nades.flash);vis('smoke',P.nades.smoke>0,'FUMAÇA '+P.nades.smoke);vis('molotov',P.nades.molotov>0,'MOLOTOV '+P.nades.molotov);const cx=Game.actCtx();vis('act',!!cx,cx==='plant'?'PLANTAR':'DESARMAR')}
       const ra=this.radar;if(ra)this.drawRadar()}
     if(S.xDyn)this.cross((P.moving?5:0)+(P.air?8:0)+P.bloom*160)},
   radar:null,
@@ -4632,7 +4717,7 @@ const HUDui={dirty:true,rt:0,cache:{},
 /* ---------------- Itens no chão (soltar / pegar) ---------------- */
 const Drops={list:[],n:0,cur:null,
   drop(wid,x,z,ammo,net,sk,id){id=id||((Online.pid||'p')+'_'+(++this.n));
-    const isN=wid==='frag'||wid==='flash'||wid==='smoke';
+    const isN=wid==='frag'||wid==='flash'||wid==='smoke'||wid==='molotov';
     const g=isN?buildNade(gSkin(wid)||{g:wid,id:'',n:'Default',c1:'#4b5320',c2:'#4b5320'}):weaponModel(wid,sk||null,false);g.scale.setScalar(isN?.6:(wid==='c4'?.95:.8));g.position.set(x,(isN?.12:(wid==='c4'?.1:.14))+((World.hg||World.low)?groundAt({x:x,z:z},99):0),z);g.rotation.set(0,Math.random()*6.28,(isN||wid==='c4')?0:Math.PI/2);World.scene.add(g);
     this.list.push({id,w:wid,x,z,a:ammo?{mag:ammo.mag,res:ammo.res}:null,m:g});if(wid==='c4'){try{BotBrain.c4Dropped(x,z)}catch(_){}}
     if(net&&!isN&&Online.room)Online.ev({t:'dr',i:id,w:wid,x:+x.toFixed(2),z:+z.toFixed(2),a:ammo?[ammo.mag,ammo.res]:0,s:sk||''});
@@ -4643,7 +4728,7 @@ const Drops={list:[],n:0,cur:null,
   c4(){return this.list.find(d=>d.w==='c4')||null},
   near(p,r,noC4){let b=null,bd=r;for(const d of this.list){if(noC4&&d.w==='c4')continue;const e=Math.hypot(d.x-p.x,d.z-p.z);if(e<bd){bd=e;b=d}}return b},
   take(d,who){if(d&&(d.w==='c4'||d.id==='c4')&&who&&who.team==='CT'){if(who.isPlayer)Game.hint('A C4 é só dos Terroristas');return}   // PROIBIÇÃO CT
-    const isN=d.w==='frag'||d.w==='flash'||d.w==='smoke';
+    const isN=d.w==='frag'||d.w==='flash'||d.w==='smoke'||d.w==='molotov';
     if(isN){const cap=d.w==='flash'?2:1;if(who.isPlayer){if(who.nades[d.w]>=cap){Game.hint('Você já tem essa granada');return}}else if(who.remote||!who.gn||who.gn[d.w]>=cap)return}
     if(!this.remove(d.id))return;
     if(!isN){try{Sync.dropDel(d.id)}catch(_){}}if(d.w==='c4'){try{Sync.c4Set(who)}catch(_){}}   // [CANAL]
@@ -4662,14 +4747,14 @@ const Drops={list:[],n:0,cur:null,
       if(ls.c4){this.drop('c4',x,z,null,true);ls.c4=null;if(Game.c4h===p)Game.c4h=null}
       if(ls.primary)this.drop(ls.primary,x+.4,z,p.ammo[ls.primary],true,(skinOf(ls.primary)||{}).id);
       if(ls.pistol&&ls.pistol!=='glock'&&ls.pistol!=='usp')this.drop(ls.pistol,x-.4,z+.3,p.ammo[ls.pistol],true,(skinOf(ls.pistol)||{}).id);
-      for(const t of['frag','flash','smoke']){for(let i=0;i<(p.nades[t]||0);i++)this.drop(t,x+sc(),z+sc(),null,false,null);p.nades[t]=0}}
+      for(const t of['frag','flash','smoke','molotov']){for(let i=0;i<(p.nades[t]||0);i++)this.drop(t,x+sc(),z+sc(),null,false,null);p.nades[t]=0}}
     else if(!p.remote){if(Game.c4h===p){this.drop('c4',x,z,null,true);Game.c4h=null}
       const w=p.wid;if(w&&W[w]&&W[w].slot===1)this.drop(w,x+.4,z,null,true,defSkin(w));
       for(const t of['frag','flash','smoke']){for(let i=0;i<(p.gn[t]||0);i++)this.drop(t,x+sc(),z+sc(),null,false,null);p.gn[t]=0}p.nd=0}},
   update(dt){if(Game.mode!=='game')return;const P=Player;
     this.cur=P.alive?this.near(P.pos,1.8,P.team==='CT'):null;const pb=document.querySelector('.hbtn[data-id=pick]');if(pb)pb.classList.toggle('near',!!this.cur);
     if(pb){const key=this.cur?this.cur.w:'';if(pb._ic!==key){pb._ic=key;      // mostra o ÍCONE do item que será pego (estilo Standoff 2)
-      let src='';if(key){try{src=key==='c4'?'':(key==='frag'||key==='flash'||key==='smoke')?Thumb.nade(key):Thumb.icon(key)}catch(e){}}
+      let src='';if(key){try{src=key==='c4'?'':(key==='frag'||key==='flash'||key==='smoke'||key==='molotov')?Thumb.nade(key):Thumb.icon(key)}catch(e){}}
       pb.innerHTML=key?(src?`<img src="${src}" alt="" style="display:block;width:64px;max-width:100%;margin:0 auto 1px;pointer-events:none"><small style="font-size:9px">PEGAR</small>`:`<span style="font-size:20px;display:block;line-height:1">${SI.bomb}</span><small style="font-size:9px">PEGAR</small>`):'PEGAR'}}
     const cd=this.c4();if(cd&&!Game.c4h)for(const b of Game.bots)if(b.team==='T'&&b.alive&&!b.remote&&!b.fol&&Math.hypot(b.pos.x-cd.x,b.pos.z-cd.z)<1.4){this.take(cd,b);break}
     {const val=w=>(w.cat||(w.kind==='pistol'?1:0))*100000+(w.price||0);      // categoria primeiro (pistola<SMG<rifle), depois preço
@@ -4681,7 +4766,7 @@ const Drops={list:[],n:0,cur:null,
       if(cw.slot===1||cw.slot===2)this.drop(b.wid,b.pos.x+.8,b.pos.z,null,true,defSkin(b.wid));   // larga a arma atual no chão
       b.noPick=40;this.take(q,b);break}}
     for(const b of Game.bots){if(!b.alive||b.remote||b.fol||b.noPick>0||!b.gn)continue;   // bots pegam granadas do chão
-      const q=this.list.find(e=>(e.w==='frag'||e.w==='flash'||e.w==='smoke')&&b.gn[e.w]<(e.w==='flash'?2:1)&&Math.hypot(e.x-b.pos.x,e.z-b.pos.z)<1.4);if(q){this.take(q,b);break}}
+      const q=this.list.find(e=>(e.w==='frag'||e.w==='flash'||e.w==='smoke'||e.w==='molotov')&&b.gn[e.w]<(e.w==='flash'?2:1)&&Math.hypot(e.x-b.pos.x,e.z-b.pos.z)<1.4);if(q){this.take(q,b);break}}
     this.list.forEach(d=>{d.m.rotation.y+=dt*.5})}
 };
 /* ---------------- Balanceamento de dano: colete proporcional e capacete ---------------- */
@@ -4843,8 +4928,8 @@ const Game={mode:'menu',phase:'none',timer:0,round:1,score:{T:0,CT:0},bots:[],op
     this.mode='game';this.matchT0=Date.now();$('#hud').classList.remove('hidden','preview');this.paused=false;$('#pauseBtn').style.display=(o.room||Online.room)?'none':'';HUDui.radar=$('#radar');HUDui.crosshair();HUD.apply();
     World.camera.fov=S.fov;World.camera.updateProjectionMatrix();this.newRound(true);try{Sync.begin()}catch(e){console.warn('sync.begin',e)}try{Rejoin.save(true)}catch(_){}},
   botLoadout(tm){const r=this.round,eco=this.opts.eco==='treino';
-    const pool=eco?['ak47','galil','awp','ssg08','p90','mac10','nova']:r<2?['glock','deagle']:r<3?['mac10','p90','nova','glock','deagle']:['ak47','galil','ak47','mac10','p90','ssg08','awp','nova'];
-    const w0=pool[(Math.random()*pool.length)|0];return tm==='CT'?({ak47:'m4a4',galil:'m4a1s',glock:'usp'}[w0]||w0):w0},
+    const pool=eco?['ak47','galil','awp','ssg08','p90','mac10','nova','famas','fal','val','m110','mp5','ump45','m60']:r<2?['glock','deagle','tec9','p350','fiveseven','berettas']:r<3?['mac10','p90','nova','glock','deagle','ump45','mp5','mp7','uzi','sm1014','tec9','berettas']:['ak47','galil','ak47','akr12','famas','fal','m16','val','mac10','p90','mp5','ssg08','awp','m110','mallard','nova','spas','sm1014'];
+    const w0=pool[(Math.random()*pool.length)|0];return tm==='CT'?({ak47:'m4a4',galil:'m4a1s',akr12:'m16',glock:'usp',tec9:'fiveseven'}[w0]||w0):w0},
   swapSides(){const f=t=>t==='T'?'CT':'T';const sc=this.score;this.score={T:sc.CT,CT:sc.T};
     Player.team=f(Player.team);Player.money=1200;
     const old=this.bots;this.bots=[];
@@ -6762,10 +6847,10 @@ const UI={tab:'play',view:'lobby',stab:'video',itab:'skins',iw:'all',ir:'all',
     finally{Rejoin._resuming=false}},
   inv(){const tabs=[['skins',SI.palette+' SKINS'],['agents',SI.user+' PERSONAGENS'],['avatars',SI.image+' AVATARES']];
     if(!tabs.some(t=>t[0]===this.itab))this.itab='skins';
-    const wf=[['all','TODAS'],['pistol','PISTOLAS'],['fuzil','FUZIS'],['rifle','RIFLES'],['knife','FACAS'],['nade','GRANADAS']],FUZ=['ak47','m4a1s','m4a4','galil'];
+    const wf=[['all','TODAS'],['pistol','PISTOLAS'],['smg','SMGS'],['fuzil','FUZIS'],['pesada','PESADAS'],['rifle','SNIPERS'],['knife','FACAS'],['nade','GRANADAS']],FUZ=Object.keys(W).filter(q=>W[q].kind==='rifle'&&q!=='m60');
     if(!wf.some(t=>t[0]===this.iw))this.iw='all';
     const rf=[['all','TODAS']].concat(RAR.map(r=>[r[0],r[0]]));if(!rf.some(t=>t[0]===this.ir))this.ir='all';
-    const f=s=>{const k=W[s.w].kind;return this.iw==='all'||(this.iw==='fuzil'&&FUZ.includes(s.w))||(this.iw==='rifle'&&k==='sniper')||(this.iw==='pistol'&&k==='pistol')||(this.iw==='knife'&&k==='knife')},
+    const f=s=>{const k=W[s.w].kind;return this.iw==='all'||(this.iw==='fuzil'&&FUZ.includes(s.w))||(this.iw==='smg'&&k==='smg')||(this.iw==='pesada'&&(k==='shotgun'||s.w==='m60'))||(this.iw==='rifle'&&k==='sniper')||(this.iw==='pistol'&&k==='pistol')||(this.iw==='knife'&&k==='knife')},
       fr=s=>this.ir==='all'||s.r===this.ir;
     const sk=SKINS.filter(isOwned),gs=GSKINS.filter(isOwned);let body='';
     if(this.itab==='skins'){
