@@ -2766,7 +2766,9 @@ function buildNade(skin, env){
   const acc  = new THREE.MeshStandardMaterial({color:0x2a2d2a, roughness:.4, metalness:.5, envMap:E});
   const add = (geo,m,x,y,z,rx=0,rz=0)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.rotation.set(rx,0,rz);o.castShadow=true;grp.add(o);return o};
 
-  if(t==='frag'){
+  if(t==='frag'&&GLBX.heMesh(grp,body)){
+    /* HE real (GLB) */
+  }else if(t==='frag'){
     add(fragBodyGeometry(.14),body,0,0,0).scale.y = 1.18;
     add(new THREE.TorusGeometry(.141,.008,8,32),acc,0,0,0,Math.PI/2);
     add(new THREE.CylinderGeometry(.045,.05,.05,14),met,0,.19,0);                       // tampa da espoleta
@@ -2815,10 +2817,10 @@ function partMat(slot,E){
    ===================================================================== */
 const GLBX=(()=>{
   const BASE='assets/',cache={},gcache={},tracked=new Set();
-  const FILE={"ak47": "w_ak47.glb", "m4a4": "w_m4a4.glb", "m4a1s": "w_m4a1s.glb", "awp_boom": "w_awp_boom.glb", "awp_egypt": "w_awp_egypt.glb", "deagle": "w_deagle.glb", "fiveseven": "w_fiveseven.glb", "mp7": "w_mp7.glb", "parafal": "w_parafal.glb", "knife": "w_knife.glb", "fp_arms": "fp_arms.glb", "char_zone9": "char_zone9.glb", "char_province": "char_province.glb", "char_archie": "char_archie.glb", "char_dummy": "char_dummy.glb"},META={"ak47": {"muzzle": -0.64, "grip": [0, -0.09, -0.032], "fore": [0, -0.017, -0.346]}, "m4a4": {"muzzle": -0.78, "grip": [0, -0.1, -0.16], "fore": [0, -0.017, -0.47]}, "m4a1s": {"muzzle": -0.78, "grip": [0, -0.1, -0.18], "fore": [0, -0.017, -0.49]}, "awp_boom": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "awp_egypt": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "deagle": {"muzzle": -0.2, "grip": [0, -0.066, 0.013], "fore": [0, -0.068, -0.005]}, "fiveseven": {"muzzle": -0.13, "grip": [0, -0.063, 0.048], "fore": [0, -0.065, 0.03]}, "mp7": {"muzzle": -0.31, "grip": [0, -0.075, 0.043], "fore": [0, -0.05, -0.164]}, "parafal": {"muzzle": -0.73, "grip": [0, -0.1, -0.09], "fore": [0, -0.017, -0.43]}, "knife": {"muzzle": -0.34, "grip": [0, 0, -0.04], "fore": [0, 0, -0.04]}},RIG={"char_zone9": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, -0.0], "chest": [0.0, 1.281, -0.0], "neck": [0.0, 1.503, -0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.37, 1.231, -0.05], "handN": [-0.557, 1.075, 0.048], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.37, 1.231, -0.05], "handP": [0.557, 1.075, 0.048], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, -0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_province": {"pelvis": [0.0, 0.967, 0.0], "spine": [0.0, 1.058, -0.0], "chest": [0.0, 1.299, -0.0], "neck": [0.0, 1.522, -0.0], "head": [0.0, 1.607, 0.017], "clavN": [-0.081, 1.459, -0.011], "uarmN": [-0.185, 1.463, -0.011], "farmN": [-0.373, 1.248, -0.051], "handN": [-0.561, 1.091, 0.049], "clavP": [0.081, 1.459, -0.011], "uarmP": [0.185, 1.463, -0.011], "farmP": [0.373, 1.248, -0.051], "handP": [0.561, 1.091, 0.049], "thighN": [-0.124, 0.967, 0.0], "calfN": [-0.142, 0.53, 0.013], "footN": [-0.161, 0.116, -0.033], "thighP": [0.124, 0.967, -0.0], "calfP": [0.142, 0.53, 0.013], "footP": [0.161, 0.116, -0.033]}, "char_archie": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_dummy": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}};
+  const FILE={"ak47": "w_ak47.glb", "m4a4": "w_m4a4.glb", "m4a1s": "w_m4a1s.glb", "awp_boom": "w_awp_boom.glb", "awp_egypt": "w_awp_egypt.glb", "deagle": "w_deagle.glb", "fiveseven": "w_fiveseven.glb", "mp7": "w_mp7.glb", "parafal": "w_parafal.glb", "knife": "w_knife.glb", "fp_arms": "fp_arms.glb", "char_zone9": "char_zone9.glb", "char_province": "char_province.glb", "char_archie": "char_archie.glb", "char_dummy": "char_dummy.glb", "g22": "w_g22.glb", "mac10": "w_mac10.glb", "akr12": "w_akr12.glb", "awm": "w_awm.glb", "berettas": "w_berettas.glb", "k_kunai": "w_k_kunai.glb", "k_butterfly": "w_k_butterfly.glb", "c4": "w_c4.glb", "he": "n_he.glb"},META={"ak47": {"muzzle": -0.64, "grip": [0, -0.09, -0.032], "fore": [0, -0.017, -0.346]}, "m4a4": {"muzzle": -0.78, "grip": [0, -0.1, -0.16], "fore": [0, -0.017, -0.47]}, "m4a1s": {"muzzle": -0.78, "grip": [0, -0.1, -0.18], "fore": [0, -0.017, -0.49]}, "awp_boom": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "awp_egypt": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "deagle": {"muzzle": -0.2, "grip": [0, -0.066, 0.013], "fore": [0, -0.068, -0.005]}, "fiveseven": {"muzzle": -0.13, "grip": [0, -0.063, 0.048], "fore": [0, -0.065, 0.03]}, "mp7": {"muzzle": -0.31, "grip": [0, -0.075, 0.043], "fore": [0, -0.05, -0.164]}, "parafal": {"muzzle": -0.73, "grip": [0, -0.1, -0.09], "fore": [0, -0.017, -0.43]}, "knife": {"muzzle": -0.34, "grip": [0, 0, -0.04], "fore": [0, 0, -0.04]}, "g22": {"muzzle": -0.13, "grip": [0, -0.058, 0.034], "fore": [0, -0.06, 0.016]}, "mac10": {"muzzle": -0.31, "grip": [0, -0.09, -0.1], "fore": [0, -0.03, -0.24]}, "akr12": {"muzzle": -0.73, "grip": [0, -0.1, -0.13], "fore": [0, -0.017, -0.45]}, "awm": {"muzzle": -0.93, "grip": [0, -0.085, -0.034], "fore": [0, -0.03, -0.341]}, "berettas": {"muzzle": -0.13, "grip": [0, -0.105, 0.061], "fore": [0, -0.107, 0.043]}, "k_kunai": {"muzzle": -0.22, "grip": [0, 0, 0.04], "fore": [0, 0, 0.04]}, "k_butterfly": {"muzzle": -0.24, "grip": [0, 0, 0.04], "fore": [0, 0, 0.04]}, "c4": {"muzzle": 0, "grip": [0, 0, 0], "fore": [0, 0, 0]}},RIG={"char_zone9": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, -0.0], "chest": [0.0, 1.281, -0.0], "neck": [0.0, 1.503, -0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.37, 1.231, -0.05], "handN": [-0.557, 1.075, 0.048], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.37, 1.231, -0.05], "handP": [0.557, 1.075, 0.048], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, -0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_province": {"pelvis": [0.0, 0.967, 0.0], "spine": [0.0, 1.058, -0.0], "chest": [0.0, 1.299, -0.0], "neck": [0.0, 1.522, -0.0], "head": [0.0, 1.607, 0.017], "clavN": [-0.081, 1.459, -0.011], "uarmN": [-0.185, 1.463, -0.011], "farmN": [-0.373, 1.248, -0.051], "handN": [-0.561, 1.091, 0.049], "clavP": [0.081, 1.459, -0.011], "uarmP": [0.185, 1.463, -0.011], "farmP": [0.373, 1.248, -0.051], "handP": [0.561, 1.091, 0.049], "thighN": [-0.124, 0.967, 0.0], "calfN": [-0.142, 0.53, 0.013], "footN": [-0.161, 0.116, -0.033], "thighP": [0.124, 0.967, -0.0], "calfP": [0.142, 0.53, 0.013], "footP": [0.161, 0.116, -0.033]}, "char_archie": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}, "char_dummy": {"pelvis": [0.0, 0.951, 0.0], "spine": [0.0, 1.042, 0.0], "chest": [0.0, 1.281, 0.0], "neck": [0.0, 1.503, 0.0], "head": [0.0, 1.588, 0.017], "clavN": [-0.08, 1.44, -0.011], "uarmN": [-0.184, 1.444, -0.011], "farmN": [-0.371, 1.231, -0.05], "handN": [-0.558, 1.075, 0.049], "clavP": [0.08, 1.44, -0.011], "uarmP": [0.184, 1.444, -0.011], "farmP": [0.371, 1.231, -0.05], "handP": [0.558, 1.075, 0.049], "thighN": [-0.123, 0.951, 0.0], "calfN": [-0.142, 0.518, 0.013], "footN": [-0.16, 0.106, -0.033], "thighP": [0.123, 0.951, 0.0], "calfP": [0.142, 0.518, 0.013], "footP": [0.16, 0.106, -0.033]}};
   const BN=['pelvis','spine','chest','neck','head','clavN','uarmN','farmN','handN','clavP','uarmP','farmP','handP','thighN','calfN','footN','thighP','calfP','footP'];
   const PAR=[-1,0,1,2,3,2,5,6,7,2,9,10,11,0,13,14,0,16,17];
-  const WMAP={ak47:'ak47',m4a4:'m4a4',m4a1s:'m4a1s',awp:'awp_boom',deagle:'deagle',fiveseven:'fiveseven',mp7:'mp7',fal:'parafal',knife:'knife'};
+  const WMAP={ak47:'ak47',m4a4:'m4a4',m4a1s:'m4a1s',awp:'awm',deagle:'deagle',fiveseven:'fiveseven',mp7:'mp7',fal:'parafal',knife:'knife',glock:'g22',mac10:'mac10',akr12:'akr12',berettas:'berettas',c4:'c4'};
   const CMAP={T:['char_zone9','char_archie'],CT:['char_province','char_archie']};
   let loader=null,hookT=0,invis=null;
   const warn=(...a)=>console.warn('[GLB]',...a);
@@ -2841,6 +2843,15 @@ const GLBX=(()=>{
   const ok=k=>cache[k]&&cache[k].state==='ok';
   /* ---------- armas ---------- */
   function gunKey(id,sk){return id==='awp'&&sk&&sk.glb?sk.glb:WMAP[id]}
+  let cmatV=null,lensM=null;
+  const cMat=()=>cmatV||(cmatV=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.55,metalness:.25,envMap:Env.get(),envMapIntensity:.8}));
+  const lensMat=()=>lensM||(lensM=new THREE.MeshPhysicalMaterial({color:0x2a4a8a,roughness:.05,metalness:.1,transparent:true,opacity:.55,envMap:Env.get(),envMapIntensity:1.2}));
+  function knife(kn,sk,vm,slots){const key='k_'+kn;if(!FILE[key])return null;if(!cache[key]){ensure(key);return null}if(!ok(key))return null;
+    const E=Env.get(),meta=META[key];let mS=skinMaterial(sk,E);const ov=slots||(sk.parts?resolveParts(sk):null);if(ov)mS=partMat(ov.S,E)||mS;
+    const g=new THREE.Group();for(const pn in cache[key].parts){const m=new THREE.Mesh(cache[key].parts[pn].geometry,mS);if(vm)m.renderOrder=999;else m.castShadow=true;m.userData.glb=1;g.add(m)}
+    g.userData={grip:new V3c(...meta.grip),fore:new V3c(...meta.fore),muzzle:meta.muzzle,glb:key};return g}
+  function heMesh(grp,body){if(!cache.he){ensure('he');return false}if(!ok('he'))return false;const gg=cache.he.parts.body;if(!gg)return false;
+    const m=new THREE.Mesh(gg.geometry,body);m.castShadow=true;m.userData.glb=1;grp.add(m);return true}
   function gun(id,skinId,vm,slots){
     const sk0=SKINS.find(s=>s.id===skinId)||SKINS.find(s=>s.id===defSkin(id)),key=gunKey(id,sk0);
     if(!key)return null;
@@ -2850,7 +2861,7 @@ const GLBX=(()=>{
     let mS=skinMaterial(sk,E),mM=new THREE.MeshPhysicalMaterial({color:0x1a1c20,roughness:.3,metalness:.8,envMap:E,envMapIntensity:.9});
     const ov=slots||(sk.parts?resolveParts(sk):null);if(ov){mS=partMat(ov.S,E)||mS;mM=partMat(ov.M,E)||mM}
     const g=new THREE.Group();
-    for(const pn in e.parts){const m=new THREE.Mesh(e.parts[pn].geometry,(pn==='body'||pn==='mag'||pn==='mag2'||(pn==='slide'&&pist))?mS:mM);
+    for(const pn in e.parts){const gg=e.parts[pn].geometry,m=new THREE.Mesh(gg,gg.attributes.color?cMat():pn==='lens'?lensMat():(pn==='body'||pn==='mag'||pn==='mag2'||(pn==='slide'&&pist))?mS:mM);
       if(vm)m.renderOrder=999;else m.castShadow=true;m.userData.glb=1;g.add(m)}
     g.userData={grip:new THREE.Vector3(...meta.grip),fore:new THREE.Vector3(...meta.fore),muzzle:meta.muzzle,glb:key};
     return g}
@@ -2952,7 +2963,7 @@ const GLBX=(()=>{
       else if(o._w){const s=SKINS.find(x=>x.id===o._w[1]);if(gunKey(o._w[0],s)===k)o.setWeapon(o._w[0],o._w[1])}}catch(_){}});
     try{const P=Player;if(!k.startsWith('char_')&&P&&P.vm&&P.cur&&Game.mode==='game'&&W[P.cur]&&(WMAP[P.cur]||k==='fp_arms')){
       World.camera.remove(P.vm);P.vm=P.isNade(P.cur)?buildNadeVM(P.cur):buildVM(W[P.cur]);P.vm.traverse(x=>x.layers.set(1));World.camera.add(P.vm)}}catch(_){}
-    clearTimeout(hookT);hookT=setTimeout(()=>{try{for(const q in Thumb.cache)if(/^[wia]/.test(q))delete Thumb.cache[q];
+    clearTimeout(hookT);hookT=setTimeout(()=>{try{for(const q in Thumb.cache)if(/^[wian]/.test(q))delete Thumb.cache[q];
       if(Game.mode==='menu'&&(UI.tab==='inv'||UI.tab==='shop'))UI.go(UI.tab)}catch(_){}},400)}
   const ALL=Object.keys(FILE);
   async function warm(keys,cb,maxMs){
@@ -2988,7 +2999,7 @@ const GLBX=(()=>{
       for(let j=0;j<3;j++)bones[14+j].quaternion.setFromAxisAngle(AXT,th[j]);
       root.updateMatrixWorld(true)}}}
   const fpReady=()=>ok('fp_arms');
-  return{ensure,gun,dressBot,warm,boot,ok,cache,fpHand,fpReady}})();
+  return{ensure,gun,dressBot,warm,boot,ok,cache,fpHand,fpReady,knife,heMesh}})();
 /* modelos de apoio (fallback blocky): aliases das armas sem GLB, facas (variantes), pares (dual) */
 const BLK_ALIAS={p350:'usp',tec9:'glock',berettas:'usp',fiveseven:'glock',ump45:'mac10',mp5:'mac10',mp7:'mac10',uzi:'mac10',famas:'m4a4',m16:'m4a4',fal:'ak47',val:'m4a1s',akr12:'ak47',sm1014:'nova',spas:'nova',m60:'m4a4',m110:'ssg08',mallard:'awp'};
 const KNV={karambit:{L:.19,pts:[[0,.022],[.05,.03],[.11,.012],[.16,-.035],[.19,-.095],[.13,-.06],[.07,-.035],[0,-.022]],ring:1},
@@ -3021,7 +3032,7 @@ function dualize(g){const o=new THREE.Group(),b=g.clone(true),ud=g.userData;b.po
   o.userData=Object.assign({},ud,{grip:ud.grip.clone(),fore:ud.grip.clone().add(new THREE.Vector3(-.085,0,0)),dual:true});return o}
 function weaponModel(id,skinId,vm,slots){
   const sk=SKINS.find(s=>s.id===skinId);let g=null;
-  try{g=(id==='knife'&&sk&&sk.kn)?knifeVariant(sk.kn,sk,vm,slots):GLBX.gun(id,skinId,vm,slots)}catch(e){console.warn('[GLB] arma',id,e)}
+  try{g=(id==='knife'&&sk&&sk.kn)?(GLBX.knife(sk.kn,sk,vm,slots)||knifeVariant(sk.kn,sk,vm,slots)):GLBX.gun(id,skinId,vm,slots)}catch(e){console.warn('[GLB] arma',id,e)}
   if(!g)g=weaponModelBlocky(id,skinId,vm,slots);
   if(W[id]&&W[id].dual)g=dualize(g);
   return g}
