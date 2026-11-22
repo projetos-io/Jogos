@@ -504,6 +504,10 @@ window.addEventListener('error',e=>{window._tsErr=(e.message||'')+' | '+String(e
    Módulos: Store · Settings · Snd · Tex · World · Nav · Weapons · Viewmodel
             Bot · Player · Controls (touch) · HUD (editor) · Shop · UI · Game
    ===================================================================== */
+/* V27 (sobre a V26): mão/braço dos personagens em 3ª pessoa (lobby, miniaturas, bots).
+   • assets/char_zone9|province|archie|dummy.glb: o bloco da mão foi trocado por uma mão 3D (malha do Nero decimada, dedos e polegar em pose de empunhadura), ligada 100% ao osso da mão (hand N/P).
+   • GLBX.Rig.update: a mão agora recebe ROLL (palma) além da direção, via frameQ + ax0/pn0 (eixo e palma no bind); antes só girava pelo menor arco e a palma/polegar caíam soltos.
+   • GLBX.ensure: ?v=27 nos char_*.glb (cache). Sem os GLBs novos, os antigos continuam servindo. Nada mais foi alterado. */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const rnd=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const V3=(x,y,z)=>new THREE.Vector3(x,y,z);
@@ -2833,7 +2837,7 @@ const GLBX=(()=>{
         if(!FILE[k]||!THREE.GLTFLoader)throw new Error('GLTFLoader/arquivo indisponível');
         loader=loader||new THREE.GLTFLoader();
         const to=setTimeout(()=>{if(e.state==='loading'){e.state='err';warn('tempo esgotado',k);res(false)}},25000);
-        loader.load(BASE+FILE[k],g=>{clearTimeout(to);if(e.state!=='loading')return;
+        loader.load(BASE+FILE[k]+(k.indexOf('char_')===0?'?v=27':''),g=>{clearTimeout(to);if(e.state!=='loading')return;
           try{const parts={};g.scene.traverse(o=>{if(o.isMesh&&o.geometry&&o.geometry.attributes.position)parts[o.name]=o});
             if(!Object.keys(parts).length)throw new Error('GLB sem malhas');
             e.parts=parts;e.state='ok';res(true);fire(k)}catch(er){e.state='err';warn('GLB inválido',k,er);res(false)}},
@@ -2878,12 +2882,20 @@ const GLBX=(()=>{
   const qe=(x,y,z)=>new Q().setFromEuler(new EUL(x,y,z,'YXZ')),qx=a=>new Q().setFromAxisAngle(UX,a);
   const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
   /* Animador por ossos: lê os controles do boneco antigo (pernas, tronco, cabeça, agachar, alvos das mãos) */
+  /* V27: orientação da mão COM roll: leva o par (eixo, palma) do bind para o par alvo. Se a palma for paralela ao eixo, cai no menor arco (comportamento antigo) */
+  function frameQ(a0,n0,a1,n1){
+    const bas=(a,n)=>{a=a.clone().normalize();n=n.clone().sub(a.clone().multiplyScalar(n.dot(a)));if(n.lengthSq()<1e-6)return null;n.normalize();return new THREE.Matrix4().makeBasis(a,n,new V3c().crossVectors(a,n))};
+    const m0=bas(a0,n0),m1=bas(a1,n1);if(!m0||!m1)return new Q().setFromUnitVectors(a0.clone().normalize(),a1.clone().normalize());
+    return new Q().setFromRotationMatrix(m1.multiply(m0.transpose()))}
   class Rig{
     constructor(o,key,cont,bones){this.o=o;this.cont=cont;this.B=bones;const b=RIG[key];
       this.bind=BN.map(n=>new V3c(...b[n]));this.loc=BN.map((n,i)=>PAR[i]<0?this.bind[i].clone():this.bind[i].clone().sub(this.bind[PAR[i]]));
       this.ix={};BN.forEach((n,i)=>this.ix[n]=i);this.f=[0,0];this.prev=[0,0];this.sgn=[1,1];this.env=.3;this.t=0;this.init=false;
       this.l1=[0,1].map(i=>{const k='NP'[i];return this.bind[this.ix['farm'+k]].distanceTo(this.bind[this.ix['uarm'+k]])});
-      this.l2=[0,1].map(i=>{const k='NP'[i];return this.bind[this.ix['hand'+k]].distanceTo(this.bind[this.ix['farm'+k]])})}
+      this.l2=[0,1].map(i=>{const k='NP'[i];return this.bind[this.ix['hand'+k]].distanceTo(this.bind[this.ix['farm'+k]])});
+      /* V27: eixo da mão (antebraço→mão) e normal da palma no bind; a mão 3D baked nos char_*.glb tem a palma virada p/ o corpo */
+      this.ax0=[0,1].map(i=>{const k='NP'[i];return this.bind[this.ix['hand'+k]].clone().sub(this.bind[this.ix['farm'+k]]).normalize()});
+      this.pn0=[0,1].map(i=>{const a=this.ax0[i],v=new V3c(i?-1:1,0,0);return v.sub(a.clone().multiplyScalar(v.dot(a))).normalize()})}
     update(){
       const now=performance.now();let dt=(now-this.t)/1000;if(this.init&&dt<.004)return;this.t=now;this.init=true;dt=cl(dt,.001,.1);
       const o=this.o,ix=this.ix,n=BN.length,q=[],pos=this.loc.map(v=>v.clone());for(let i=0;i<n;i++)q.push(new Q());
@@ -2915,7 +2927,7 @@ const GLBX=(()=>{
           else if(kn){TN=gT.clone().add(dwn(-.04));poleN=[-.5,-1,-.1];poleP=[.3,-1,-.2]}
           else if(pi){TN=TP.clone().add(new V3c(-.07,-.05,-.06));hdN=new V3c(.6,.15,.8).normalize();poleN=[-.5,-1,-.3];poleP=[.3,-1,-.2]}
           else{const fo=g.userData.fore.clone();fo.z*=(o._fz||.7);fo.applyMatrix4(M);TN=fo.add(dwn(-.05)).addScaledVector(fw,-.08);poleN=[-.5,-1,-.1];poleP=[.4,-1,-.6]}
-          tg[1]={T:TP,hd:fw,pole:poleP};tg[0]={T:TN,hd:hdN,pole:poleN}}}
+          tg[1]={T:TP,hd:fw,pole:poleP,pn:sd.clone().negate()};tg[0]={T:TN,hd:hdN,pole:poleN,pn:(du||kn||pi)?sd.clone():new V3c(0,1,0).addScaledVector(sd,.35)}}}   /* V27 pn: palma da mão do cabo p/ a arma; mão de apoio: p/ a arma (pistola/faca/dual) ou p/ cima (guarda-mão) */
       ['N','P'].forEach((k,i)=>{const arm=o.arms[i];let A=tg[i];
         if(!A){if(!arm||!arm.H)return;const dn0=arm.H.clone().sub(this.B[ix['uarm'+k]].position).normalize();A={T:arm.H.clone(),hd:null,pole:[k==='N'?-.7:.7,-.8,-.25],raw:1}}
         const T=A.T.clone().applyQuaternion(tq).add(tp),ci=ix['clav'+k],ua=ix['uarm'+k],fa=ix['farm'+k],ha=ix['hand'+k],S=Pw[ua],l1=this.l1[i],l2=this.l2[i];
@@ -2928,7 +2940,7 @@ const GLBX=(()=>{
         const Qu=new Q().setFromUnitVectors(bd1.clone().normalize(),E.clone().sub(S).normalize()),Qf=new Q().setFromUnitVectors(bd2.clone().normalize(),Wr.clone().sub(E).normalize());
         q[ua]=Qw[ci].clone().invert().multiply(Qu);Qw[ua]=Qu;Pw[fa]=S.clone().add(bd1.applyQuaternion(Qu));
         q[fa]=Qu.clone().invert().multiply(Qf);Qw[fa]=Qf;
-        if(A.hd){const Qh=new Q().setFromUnitVectors(bd2.clone().normalize(),A.hd.clone().normalize().applyQuaternion(tq));q[ha]=Qf.clone().invert().multiply(Qh);Qw[ha]=Qh}else q[ha]=new Q()});
+        if(A.hd){const hw=A.hd.clone().normalize().applyQuaternion(tq),Qh=A.pn?frameQ(this.ax0[i],this.pn0[i],hw,A.pn.clone().applyQuaternion(tq)):new Q().setFromUnitVectors(bd2.clone().normalize(),hw);q[ha]=Qf.clone().invert().multiply(Qh);Qw[ha]=Qh}else q[ha]=new Q()});
       for(let i=0;i<n;i++){this.B[i].position.copy(pos[i]);this.B[i].quaternion.copy(q[i])}
       this.B[0].updateMatrixWorld(true)}}
   const CMAT=()=>{const m=new THREE.MeshLambertMaterial({vertexColors:true});m.skinning=true;return m};
