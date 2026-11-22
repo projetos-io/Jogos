@@ -2994,13 +2994,14 @@ const GLBX=(()=>{
     const AXF=new V3c(-1,0,0),AXT=new V3c(...B.axT),qq=new THREE.Quaternion(),bas=new THREE.Matrix4();
     return{root,pose(W,xl,F,zl,E,curl,th,cf,thf){
       root.position.copy(W);bas.makeBasis(xl,F,zl);root.quaternion.setFromRotationMatrix(bas);
-      const dl=E.clone().sub(W).normalize().applyQuaternion(root.quaternion.clone().invert());bones[1].quaternion.setFromUnitVectors(new V3c(0,-1,0),dl);bones[1].scale.y=1.12;
+      const dl=E.clone().sub(W).normalize().applyQuaternion(root.quaternion.clone().invert());bones[1].quaternion.setFromUnitVectors(new V3c(0,-1,0),dl);bones[1].scale.y=1.9;
       for(let i=0;i<4;i++)for(let j=0;j<3;j++)bones[2+i*3+j].quaternion.setFromAxisAngle(AXF,cf?cf[i][j]:curl[j]);
       for(let j=0;j<3;j++)bones[14+j].quaternion.setFromAxisAngle(AXT,(thf||th)[j]);
       root.updateMatrixWorld(true)}}}
   const fpReady=()=>ok('fp_arms');
   return{ensure,gun,dressBot,warm,boot,ok,cache,fpHand,fpReady,knife,heMesh}})();
 /* modelos de apoio (fallback blocky): aliases das armas sem GLB, facas (variantes), pares (dual) */
+const GLB_ALIAS={p350:'glock',tec9:'glock',ump45:'mac10',uzi:'mac10',famas:'m4a4',m16:'m4a4',val:'m4a1s',m60:'m4a4',m110:'awp',mallard:'awp'};
 const BLK_ALIAS={p350:'usp',tec9:'glock',berettas:'usp',fiveseven:'glock',ump45:'mac10',mp5:'mac10',mp7:'mac10',uzi:'mac10',famas:'m4a4',m16:'m4a4',fal:'ak47',val:'m4a1s',akr12:'ak47',sm1014:'nova',spas:'nova',m60:'m4a4',m110:'ssg08',mallard:'awp'};
 const KNV={karambit:{L:.19,pts:[[0,.022],[.05,.03],[.11,.012],[.16,-.035],[.19,-.095],[.13,-.06],[.07,-.035],[0,-.022]],ring:1},
   jkommando:{L:.2,pts:[[0,.022],[.17,.026],[.21,0],[.17,-.014],[0,-.022]]},
@@ -3032,7 +3033,7 @@ function dualize(g){const o=new THREE.Group(),b=g.clone(true),ud=g.userData;b.po
   o.userData=Object.assign({},ud,{grip:ud.grip.clone(),fore:ud.grip.clone().add(new THREE.Vector3(-.085,0,0)),dual:true});return o}
 function weaponModel(id,skinId,vm,slots){
   const sk=SKINS.find(s=>s.id===skinId);let g=null;
-  try{g=(id==='knife'&&sk&&sk.kn)?(GLBX.knife(sk.kn,sk,vm,slots)||knifeVariant(sk.kn,sk,vm,slots)):GLBX.gun(id,skinId,vm,slots)}catch(e){console.warn('[GLB] arma',id,e)}
+  try{g=(id==='knife'&&sk&&sk.kn)?(GLBX.knife(sk.kn,sk,vm,slots)||knifeVariant(sk.kn,sk,vm,slots)):(GLBX.gun(id,skinId,vm,slots)||(GLB_ALIAS[id]?GLBX.gun(GLB_ALIAS[id],skinId,vm,slots):null))}catch(e){console.warn('[GLB] arma',id,e)}
   if(!g)g=weaponModelBlocky(id,skinId,vm,slots);
   if(W[id]&&W[id].dual)g=dualize(g);
   return g}
@@ -3207,7 +3208,7 @@ const HX=(()=>{
     else if(k==='bomb'){R=Object.assign({C:V(.15,-.03,.08),F:V(0,-.25,-.97),N:V(-1,0,0),curl:[.55,.8,.55],th:[.3,.4,.3]},nR);
       L={C:V(-.15,-.03,.08),F:V(0,-.25,-.97),N:V(1,0,0),curl:[.55,.8,.55],th:[.3,.4,.3],n:V(-.36,-.22,.91),len:.58,eb:V(-.6,-.8,.2)}}
     else if(k==='pistol'){R=Object.assign({C:P(gp,.034,0,0),F:V(0,-.2,-.98),N:V(-1,0,0),curl:[1,1.4,1],th:[.25,.4,.3],cf:CFR,thf:THR},nR);
-      L={C:P(gp,-.034,-.002,-.018),F:V(0,-.15,-.99),N:V(1,0,0),curl:[.9,1.3,.9],th:[.05,.1,.05],cf:CFL,thf:THL,n:V(-.36,-.22,.91),len:.58,eb:V(-.6,-.8,.2)}}
+      L=!w.dual?null:{C:P(fo,-.034,-.002,-.018),F:V(0,-.15,-.99),N:V(1,0,0),curl:[.9,1.3,.9],th:[.05,.1,.05],cf:CFL,thf:THL,n:V(-.36,-.22,.91),len:.58,eb:V(-.6,-.8,.2)}}
     else{R=Object.assign({C:P(gp,.037,0,.01),F:V(0,-.14,-.99),N:V(-1,0,0),curl:[.95,1.35,.95],th:[.35,.5,.3],cf:CFR,thf:THR},nR);
       L={C:P(fo,.009,-.038,0),F:V(.95,.25,0),N:V(-.24,.97,0),curl:[.8,1.2,.9],th:[.2,.3,.2],cf:CFL,thf:THL,n:V(-.4,-.15,.9),len:.58,eb:V(-.7,-.42,-.42)}}
     return{R,L}}
