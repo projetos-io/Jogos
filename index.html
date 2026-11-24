@@ -3272,7 +3272,7 @@ function buildVM(w,tm){
   else HX.attach(pv,w,ud,agentOf(tm||Player.team).suit);
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(.2,.2),new THREE.MeshBasicMaterial({color:0xffd070,transparent:true,opacity:.95,depthTest:false,blending:THREE.AdditiveBlending}));
   fl.position.set(0,.02,ud.muzzle*(fpm?1:.8)-.03);fl.visible=false;fl.renderOrder=1000;g.add(fl);g.userData.flash=fl;
-  const bp=fpm?[fpm.bp.x,fpm.bp.y,fpm.bp.z]:({pistol:[.17,-.19,-.45],smg:[.2,-.22,-.55],knife:[.22,-.22,-.40],bomb:[.02,-.24,-.5]}[w.kind]||[.2,-.22,-.62]);
+  const bp=fpm?[fpm.bp.x+(w.id==='ak47'?.14:0),fpm.bp.y+(w.id==='ak47'?-.05:0),fpm.bp.z]:({pistol:[.17,-.19,-.45],smg:[.2,-.22,-.55],knife:[.22,-.22,-.40],bomb:[.02,-.24,-.5]}[w.kind]||[.2,-.22,-.62]);
   g.position.set(bp[0],bp[1],bp[2]);g.userData.base=g.position.clone();return g}
 
 /* ---------------- Efeitos (poeira/sangue/tracer) ---------------- */
