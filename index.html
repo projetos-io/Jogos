@@ -3008,7 +3008,10 @@ const GLBX=(()=>{
       for(let i=0;i<n;i++){const c=sl&&sl.array[i]===0?cA:cG;col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b}
       geo=new THREE.BufferGeometry();geo.setAttribute('position',a.position);geo.setAttribute('normal',a.normal);geo.setAttribute('color',new THREE.BufferAttribute(col,3));if(g0.geometry.index)geo.setIndex(g0.geometry.index);fpag[gk]=geo}
     if(!fpaMatV)fpaMatV=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.85,metalness:0});
-    const m=new THREE.Mesh(geo,fpaMatV);m.renderOrder=999;m.frustumCulled=false;const b=FPBP[k];return{arms:m,bp:new V3c(b[0],b[1],b[2])}}
+    const m=new THREE.Mesh(geo,fpaMatV);m.renderOrder=999;m.frustumCulled=false;const b=FPBP[k];
+    let out=m;const gh=cache[key].parts.hands;   /* luvas com textura (tiger) vindas do próprio GLB, se existirem */
+    if(gh&&gh.material){gh.material.side=THREE.DoubleSide;const hm=new THREE.Mesh(gh.geometry,gh.material);hm.renderOrder=999;hm.frustumCulled=false;out=new THREE.Group();out.add(m);out.add(hm)}
+    return{arms:out,bp:new V3c(b[0],b[1],b[2])}}
   return{ensure,gun,dressBot,warm,boot,ok,cache,fpHand,fpReady,knife,heMesh,fpModel}})();
 /* modelos de apoio (fallback blocky): aliases das armas sem GLB, facas (variantes), pares (dual) */
 const GLB_ALIAS={p350:'glock',tec9:'glock',ump45:'mac10',uzi:'mac10',famas:'m16',val:'m4a1s',m60:'m16',sm1014:'nova',m110:'awp',mallard:'awp'};
