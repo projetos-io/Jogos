@@ -3275,8 +3275,9 @@ function buildVM(w,tm){
   else HX.attach(pv,w,ud,agentOf(tm||Player.team).suit);
   const fl=new THREE.Mesh(new THREE.PlaneGeometry(.2,.2),new THREE.MeshBasicMaterial({color:0xffd070,transparent:true,opacity:.95,depthTest:false,blending:THREE.AdditiveBlending}));
   fl.position.set(0,.02,ud.muzzle*(fpm?1:.8)-.03);fl.visible=false;fl.renderOrder=1000;g.add(fl);g.userData.flash=fl;
-  const bp=fpm?[fpm.bp.x+(w.id==='ak47'?.14:0),fpm.bp.y+(w.id==='ak47'?-.05:0),fpm.bp.z]:({pistol:[.17,-.19,-.45],smg:[.2,-.22,-.55],knife:[.22,-.22,-.40],bomb:[.02,-.24,-.5]}[w.kind]||[.2,-.22,-.62]);
-  if(fpm&&w.id==='ak47'){   /* enquadramento estilo referência: arma maior, girada, vista de cima */
+  const vmf=!!fpm&&!(window.VMF_OFF||[]).includes(w.id);   /* enquadramento estilo Standoff 2 em todas as armas com GLB de braços; window.VMF_OFF=['id',...] desliga por arma */
+  const bp=fpm?[fpm.bp.x+(vmf?.14:0),fpm.bp.y+(vmf?-.05:0),fpm.bp.z]:({pistol:[.17,-.19,-.45],smg:[.2,-.22,-.55],knife:[.22,-.22,-.40],bomb:[.02,-.24,-.5]}[w.kind]||[.2,-.22,-.62]);
+  if(vmf){   /* enquadramento estilo referência: arma maior, girada, vista de cima */
     const ig=new THREE.Group(),pvt=new THREE.Vector3(0,-.05,-.30),SC=1.376,R=new THREE.Quaternion().setFromEuler(new THREE.Euler(2.084*Math.PI/180,4.993*Math.PI/180,.821*Math.PI/180,'ZXY'));
     ig.quaternion.copy(R);ig.scale.setScalar(SC);ig.position.copy(pvt).sub(pvt.clone().applyQuaternion(R).multiplyScalar(SC)).add(new THREE.Vector3(.148,-.057,0));
     g.children.slice().forEach(c=>ig.add(c));g.add(ig);g.userData.vmFov=60}   /* FOV só do viewmodel (60°): arma maior e mais próxima, estilo Standoff 2 */
