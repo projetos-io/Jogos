@@ -3274,9 +3274,9 @@ function buildVM(w,tm){
   fl.position.set(0,.02,ud.muzzle*(fpm?1:.8)-.03);fl.visible=false;fl.renderOrder=1000;g.add(fl);g.userData.flash=fl;
   const bp=fpm?[fpm.bp.x+(w.id==='ak47'?.14:0),fpm.bp.y+(w.id==='ak47'?-.05:0),fpm.bp.z]:({pistol:[.17,-.19,-.45],smg:[.2,-.22,-.55],knife:[.22,-.22,-.40],bomb:[.02,-.24,-.5]}[w.kind]||[.2,-.22,-.62]);
   if(fpm&&w.id==='ak47'){   /* enquadramento estilo referência: arma maior, girada, vista de cima */
-    const ig=new THREE.Group(),pvt=new THREE.Vector3(0,-.05,-.30),SC=1.2,R=new THREE.Quaternion().setFromEuler(new THREE.Euler(0,10*Math.PI/180,25*Math.PI/180,'ZXY'));
-    ig.quaternion.copy(R);ig.scale.setScalar(SC);ig.position.copy(pvt).sub(pvt.clone().applyQuaternion(R).multiplyScalar(SC)).add(new THREE.Vector3(-.01,0,0));
-    g.children.slice().forEach(c=>ig.add(c));g.add(ig)}
+    const ig=new THREE.Group(),pvt=new THREE.Vector3(0,-.05,-.30),SC=1.376,R=new THREE.Quaternion().setFromEuler(new THREE.Euler(2.084*Math.PI/180,4.993*Math.PI/180,.821*Math.PI/180,'ZXY'));
+    ig.quaternion.copy(R);ig.scale.setScalar(SC);ig.position.copy(pvt).sub(pvt.clone().applyQuaternion(R).multiplyScalar(SC)).add(new THREE.Vector3(.148,-.057,0));
+    g.children.slice().forEach(c=>ig.add(c));g.add(ig);g.userData.vmFov=60}   /* FOV só do viewmodel (60°): arma maior e mais próxima, estilo Standoff 2 */
   g.position.set(bp[0],bp[1],bp[2]);g.userData.base=g.position.clone();return g}
 
 /* ---------------- Efeitos (poeira/sangue/tracer) ---------------- */
@@ -5142,7 +5142,8 @@ const Game={mode:'menu',phase:'none',timer:0,round:1,score:{T:0,CT:0},bots:[],op
     R.render(World.scene,C);
     const v=Player.alive?Player.vm:this.svm;
     if(v&&v.visible){const vs=this.vmScene(),ac=R.autoClear;R.autoClear=false;R.clearDepth();
-      try{vs.add(C);C.layers.set(1);R.render(vs,C)}finally{C.layers.set(0);World.scene.add(C);R.autoClear=ac}}}
+      const vf=v.userData&&v.userData.vmFov,of=C.fov;if(vf){C.fov=vf;C.updateProjectionMatrix()}
+      try{vs.add(C);C.layers.set(1);R.render(vs,C)}finally{if(vf){C.fov=of;C.updateProjectionMatrix()}C.layers.set(0);World.scene.add(C);R.autoClear=ac}}}
 };
 
 /* ---------------- Lobby 3D (cena do menu: agente no centro, caixas em volta) ---------------- */
